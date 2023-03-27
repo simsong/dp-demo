@@ -1,0 +1,149 @@
+<html class="no-js" lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link href="assets/css/docs.css" rel="stylesheet" />
+      <script src="assets/js/modernizr.js"></script>
+      <script src="assets/js/templates.js"></script>
+      <script src="assets/js/all.js"></script>
+      
+      <style>
+         body {
+            padding: 10px;
+         }
+         span {
+            text-align: center;
+         }
+
+         .column,
+         .columns {
+            height: 50px;
+            border-left: 1px solid black;
+         }
+         
+         .column:last-child,
+         .columns:last-child {
+            border-right: 1px solid black;
+         }
+         
+         .row:first-child {
+            border-top: 1px solid black;
+         }
+         .row {
+            border-bottom: 1px solid black;
+         }
+         </style>
+   </head>
+   
+   <body>
+      
+      <!-- Header -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Category</div>
+         <div class="small-6 medium-6 column">Real Value</div>
+         <div class="small-2 medium-2 column">Raw Value</div>
+         <div class="small-2 medium-2 column">Reported Value</div>
+      </div>
+
+      <!-- Category 1 -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Cat 1</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutput1"></span></div>
+         <div class="small-5 medium-5 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="slider1" data-slider data-options="display_selector:#sliderOutput1; trigger_input_change: true">
+               <span class="range-slider-handle" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+         <div class="small-2 medium-2 column"><span id="rawOutput1"></span></div>
+         <div class="small-2 medium-2 column"><span id="repOutput1"></span></div>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Cat 2</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutput2"></span></div>
+         <div class="small-5 medium-5 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="slider2" data-slider data-options="display_selector:#sliderOutput2; trigger_input_change: true">
+               <span class="range-slider-handle" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+         <div class="small-2 medium-2 column"><span id="rawOutput2"></span></div>
+         <div class="small-2 medium-2 column"><span id="repOutput2"></span></div>
+      </div>
+      
+      <!-- Category 3 -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Cat 3</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutput3"></span></div>
+         <div class="small-5 medium-5 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="slider3" data-slider data-options="display_selector:#sliderOutput3; trigger_input_change: true">
+               <span class="range-slider-handle" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+         <div class="small-2 medium-2 column"><span id="rawOutput3"></span></div>
+         <div class="small-2 medium-2 column"><span id="repOutput3"></span></div>
+      </div>
+      
+      <!-- Category 4 -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Cat 4</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutput4"></span></div>
+         <div class="small-5 medium-5 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="slider4" data-slider data-options="display_selector:#sliderOutput4; trigger_input_change: true">
+               <span class="range-slider-handle" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+         <div class="small-2 medium-2 column"><span id="rawOutput4"></span></div>
+         <div class="small-2 medium-2 column"><span id="repOutput4"></span></div>
+      </div>
+
+      <!-- Epsilon -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Epsilon</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutputE"></span></div>
+         <div class="small-9 medium-9 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="sliderE" data-slider data-options="display_selector:#sliderOutputE; trigger_input_change: true">
+               <span class="range-slider-handle" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+      </div>
+      
+      <!-- Foundation Init -->    
+      <script>
+      
+         $(document).foundation({
+            slider: {
+               on_change: function() {
+                  var slider1 = $('#slider1').attr('data-slider');
+                  var slider2 = $('#slider2').attr('data-slider');
+                  var slider3 = $('#slider3').attr('data-slider');
+                  var slider4 = $('#slider4').attr('data-slider');
+                  
+                  $('#rawOutput1').html(slider1);
+                  $('#rawOutput2').html(slider2);
+                  $('#rawOutput3').html(slider3);
+                  $('#rawOutput4').html(slider4);
+               }
+            }
+         });
+
+      </script>
+      
+   </body>
+</html>
+

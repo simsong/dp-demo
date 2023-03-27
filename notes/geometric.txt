@@ -1,0 +1,40 @@
+Notes on the Geometric mechanism:
+
+Here is an implementation in python:
+
+def geometric_mechanism(*, true_answer, budget, sensitivity, prng):
+    shape = numpy.shape(true_answer)
+    epsilon = budget / float(sensitivity)
+    p = 1 - numpy.exp(-epsilon)
+    x = prng.geometric(p, size=shape) - 1 #numpy geometrics start with 1
+    y = prng.geometric(p, size = shape) - 1
+    return x-y + true_answer
+
+ignore size/shape --- that's just the number of times to re-run this.  Pass "p" to the rk_geometric_below..
+
+   
+Here is the numpy definition of prng.geometric; ignore state, that's just the state of the random number generator.
+
+
+long rk_geometric_search(rk_state *state, double p) 
+{ 
+     double U; 
+     long X; 
+     double sum, prod, q; 
+ 
+     X = 1; 
+     sum = prod = p; 
+     q = 1.0 - p; 
+     U = rk_double(state); 
+     while (U > sum) 
+     { 
+         prod *= q; 
+         sum += prod; 
+         X++; 
+     } 
+     return X; 
+ } 
+
+
+rk_double() just returns a random number between 0 and 1.
+

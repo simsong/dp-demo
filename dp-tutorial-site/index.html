@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="tutorial.css" rel="stylesheet">
+  <link href="census.css" rel="stylesheet">
+  <script src='jquery.min.js'></script>
+  <script src='privatize.js'></script>
+</head>
+
+<body>
+  <header class="uscb-layout-row uscb-header-container">
+    <div class="uscb-flex-row-20 uscb-flex-row-md-100
+                  uscb-layout-align-center-center uscb-layout-align-md-start-center">
+      <div class="uscb-menu-icon-container uscb-hide-gt-md
+                    uscb-flex-row-md-20"></div>
+      <div class="uscb-flex-row-md-80">
+        <a href="https://www.census.gov">
+          <img class="uscb-nav-image" src="images/census.svg">
+        </a>
+      </div>
+    </div>
+    <div class="uscb-flex-row-80 uscb-layout-align-start-center uscb-hide-md">
+      <h1 class="uscb-h2 uscb-color-white"><a href="index.html">Disclosure Avoidance</a></h1>
+    </div>
+  </header>
+
+  <section class="uscb-padding-1em">
+    <div class="uscb-border-TB-light-teal uscb-layout-row uscb-layout-align-center-center">
+      <h1 class="uscb-h1 uscb-margin-TB-10px">Data Privacy Education</h1>
+    </div>
+    <p class="uscb-sub-heading-1 uscb-padding-TB-30" style="text-align:center">Learn the basics of Census 2020 data privacy, from noise injection to census blocks.</p>
+    <div class="uscb-layout-row uscb-layout-column-sm uscb-layout-align-center-start">
+
+      <div class="uscb-flex-row-33 uscb-flex-row-sm-100 uscb-text-align-center">
+        <a href='intro.html'><img src="images/cblock.png" alt="" style="height:250px" /></a>
+        <h3 class="uscb-bold-text uscb-margin-bottom-10px"><a href='intro.html'>Noise Injection Tutorial</a></h3>
+        <div class="uscb-layout-row uscb-layout-align-center-center">
+          <button id="tutorial" class="uscb-text-img-button
+                                       uscb-layout-row
+                                       uscb-layout-align-center-center"
+                  onclick="window.location = 'intro.html'">
+            <svg className="ovaltealcircle uscb-margin-left-10px" width="27px" height="27px" viewBox="0 0 27 27" version="1.1">
+              <g id="Arrow-/-Teal" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" transform="translate(-1.000000, -1.000000)">
+                <g id="Group" transform="translate(2.000000, 2.000000)" stroke="#008392">
+                  <circle id="Oval-2" cx="12.5" cy="12.5" r="12.5"></circle>
+                  <polyline id="Path" strokeLinecap="round" points="9 7 16 12.5 9 18"></polyline>
+                </g>
+              </g>
+          </svg>
+          </button>
+        </div>
+        <p class="uscb-sub-heading-2 uscb-text-height-70">Learn about how the 2020 Census uses "noise" to protect the privacy of individuals' data, and how noise relates to accuracy at different geographic levels. </p>
+
+      </div>
+      <div class="uscb-flex-row-33 uscb-flex-row-sm-100 uscb-text-align-center">
+        <a href='simulator.html'><img src="images/simulator.png" alt="" style="height:250px" /></a>
+        <h3 class="uscb-bold-text uscb-margin-bottom-10px"><a href='simulator.html'>Privacy Simulator</a></h3>
+        <div class="uscb-layout-row uscb-layout-align-center-center">
+          <button id='simulator' class="uscb-text-img-button uscb-layout-row uscb-layout-align-center-center" onclick="window.location = 'simulator'">
+            <svg className="ovaltealcircle uscb-margin-left-10px" width="27px" height="27px" viewBox="0 0 27 27" version="1.1" >
+              <g id="Arrow-/-Teal" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" transform="translate(-1.000000, -1.000000)">
+                <g id="Group" transform="translate(2.000000, 2.000000)" stroke="#008392">
+                  <circle id="Oval-2" cx="12.5" cy="12.5" r="12.5"></circle>
+                  <polyline id="Path" strokeLinecap="round" points="9 7 16 12.5 9 18"></polyline>
+                </g>
+              </g>
+          </svg>
+          </button>
+        </div>
+        <p class="uscb-sub-heading-2 uscb-text-height-70">
+          Visualize the privacy-accuracy tradeoff and understand the
+          idea of the privacy loss budget in relation to noise.
+        </p>
+      </div>
+    </div>
+  </section>
+ </body>

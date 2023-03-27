@@ -1,0 +1,262 @@
+<html class="no-js" lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link href="assets/css/docs.css" rel="stylesheet" />
+      <script src="assets/js/all.js"></script>
+      <script src="sprintf.min.js"></script>
+      <script src="js/privatize.js"></script>
+
+      <script>
+         var num_categories = 0;
+         
+         var raceCategories = ["White", "Hispanic", "Black", "Asian", "AIAN", "MENA", "NHPI", "SOR"];
+         
+         var categoryTemplate = [
+            '<div class="row">',
+               '<div class="small-2 medium-2 column">{2}</div>',
+               '<div class="small-1 medium-1 column"><span id="sliderOutput{0}"></span></div>',
+               '<div class="small-5 medium-5 column">',
+                  '<div class="range-slider" id="slider{0}" data-slider data-options="initial: {1}; start:0; end:99; step:1; display_selector:#sliderHandle{0}; trigger_input_change: true">',
+                     '<span class="range-slider-handle" id="sliderHandle{0}" role="slider" tabindex="{0}"></span>',
+                     '<span class="range-slider-active-segment"></span>',
+                  '</div>',
+               '</div>',
+               '<div class="small-2 medium-2 column"><span id="rawOutput{0}"></span></div>',
+               '<div class="small-2 medium-2 column"><span id="repOutput{0}"></span></div>',
+            '</div>'
+         ];
+         
+         // Get Combinations    
+         function getCombinations(arr, n) {
+            var i, j, k, elem;
+            var l = arr.length;
+            var childperm, ret=[];
+
+            if (n == 1) {
+               for (i = 0; i < l; i++) {
+                  elem = arr.shift();
+                  ret.push([elem]);
+               }
+               return ret;
+            } else {
+               for (i = 0; i < l; i++) {
+                  elem = arr.shift();
+                  
+                  childperm = getCombinations(arr.slice(), n-1);
+                  
+                  for (k = 0; k < childperm.length; k++) {
+                     ret.push([elem].concat(childperm[k]));
+                  }
+               }
+               return ret;
+            }
+         }
+         
+         // Format Function
+         // Usage: String.format('{0} + {0} = {1}', '1', '2');
+         if (!String.format) {
+            String.format = function(format) {
+               var args = Array.prototype.slice.call(arguments, 1);
+               return format.replace(/{(\d+)}/g, function(match, number) { 
+                  return typeof args[number] != 'undefined' ? args[number] : match;
+               });
+            };
+         }
+         
+         // Generate the Category Rows of the UI using the 'categoryTemplate'
+         // _num is the number of race categories to combine 1, 2, or 3
+         // _off is the offset DOM element id
+         function generateCatRow(_num, _off) {
+            var i;
+            var output = '';
+            var categories;
+
+            categories = getCombinations(raceCategories.slice(0), _num);
+         
+            for (i = 0; i < categories.length; i++) {
+               output += String.format(categoryTemplate.join('\n'), (i+_off), 10, categories[i]);
+            }
+
+            // Keep track of total categories, needed later in 'update_ui'
+            num_categories += categories.length;
+
+            return output;
+         }
+         
+         function update_ui() {
+            var total_val = 0;
+            var total_rep = 0;
+            
+            // Fetch Epsilon / Budget
+            var epsilon = parseFloat($("#sliderE").attr('data-slider')) / 1000.0;
+
+            // Privatize Data
+            for (var i = 0; i < num_categories; i++) {
+               
+               // Fetch real value from slider
+               var val = parseInt($('#slider'+i).attr('data-slider'));
+               
+               // Calculate noise from budget=e and sensitivity=1
+               var noise = geometric_noise(epsilon, 1);
+               
+               /*
+               If you want to try Laplace
+               var noise = laplace_noise(epsilon, 1);
+               */
+               
+               // Add noise to real value to yield private value
+               var pri = noise + val;
+               
+               // Round private value to yield reported value
+               var rep = Math.max(Math.round(pri),0);
+               
+               // Track total real and total reported
+               total_val += val;
+               total_rep += rep;
+
+               // Update UI
+               $('#sliderOutput'+i).html(val);
+               $('#rawOutput'+i).html(sprintf('%6.3f', pri));
+               $('#repOutput'+i).html(sprintf('%d',    rep));
+            }
+            
+            // Update Epsilon UI
+            $('#sliderOutputE').html(sprintf('%6.3f',epsilon));
+            $('#sliderHandleE').html(sprintf('%6.3f',epsilon));
+
+            // Update Total Values UI
+            $('#totalOutput').html(sprintf('%d', total_val));                  
+            $('#errorOutput').html(sprintf('%d', total_rep));                  
+         }
+         
+         /*
+            Buffer slider 'change' events
+            Waits until slider is done moving before updating UI
+         */
+         var buffer_timer = false;
+         
+         function buffer_ticks() {
+            if (buffer_timer) {
+               clearTimeout(buffer_timer);
+            }
+            
+            // If the slider pauses for more than 200ms, call 'update_ui'
+            buffer_timer = setTimeout(update_ui, 200);
+         }
+
+         // JQuery Document Ready
+         $(document).ready(function() {
+            // Generate Category Rows
+            $('#categories1').html(generateCatRow(1, 0));
+          //$('#categories2').html(generateCatRow(2, 8));
+          //$('#categories3').html(generateCatRow(3, 36));
+
+            // Initialize Foundation 6
+            $(document).foundation({ slider: { on_change: buffer_ticks } });
+         });
+         
+      </script>
+
+      <style>
+         body {
+            padding: 10px;
+         }
+         
+         span {
+            text-align: center;
+         }
+
+         .range-slider-handle {
+            height: auto;
+            width: 3em;
+            color: white;
+            border-radius: 3px;
+         }
+         
+         .column,
+         .columns {
+            height: 50px;
+            border-left: 1px solid black;
+         }
+         
+         .column:last-child,
+         .columns:last-child {
+            border-right: 1px solid black;
+         }
+         
+         .row {
+            border: 0;
+            border-bottom: 1px solid black;
+         }
+         .row:first-child {
+            border-top: 1px solid black;
+         }
+         
+         .categories {
+            border:  0;
+            padding: 0;
+            margin:  0;
+         }
+
+         #buttons {
+            border:  0;
+            padding: 10px;
+            text-align: center;
+         }
+         
+         </style>
+   </head>
+   
+   <body>
+      
+      <div class="row">
+         <h2>Differentially Private Race Count Simulator</h2>
+         <p>Algorithm: the counts are set by the sliders, then privatized with the differential privacy Geometric mechanism.
+            The privatized values are rounded to the nearest non-negative integer.
+            Finally, the error between the actual count and the privatized count is randomly distributed among the values.
+         </p>
+      </div>
+      
+      <!-- Header -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Category</div>
+         <div class="small-6 medium-6 column">Real Value</div>
+         <div class="small-2 medium-2 column">Raw Value</div>
+         <div class="small-2 medium-2 column">Reported Value</div>
+      </div>
+
+      <!-- Categories -->
+      <div id="categories1" class="categories"></div>
+      <div id="categories2" class="categories"></div>
+      <div id="categories3" class="categories"></div>
+      
+      <!-- Total -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Total</div>
+         <div class="small-1 medium-1 column"><span id="totalOutput"></span></div>
+         <div class="small-7 medium-7 column"></div>
+         <div class="small-2 medium-2 column"><span id="errorOutput"></span></div>
+      </div>
+
+      <!-- Epsilon -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Budget (&epsilon;)</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutputE"></span></div>
+         <div class="small-9 medium-9 column">
+            <!-- SLIDER START   -->
+            <div class="range-slider" id="sliderE" data-slider data-options="initial: 1000; start:1; end:2000; step:1; display_selector:#sliderHandleE; trigger_input_change: true">
+               <span class="range-slider-handle" id="sliderHandleE" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+            <!-- SLIDER END   -->
+         </div>
+      </div>
+      
+      <div id="buttons">
+         <button class="button" onclick="update_ui()">Run Again</button>
+      </div>
+
+   </body>
+</html>
+

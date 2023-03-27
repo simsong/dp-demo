@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="census.css" rel="stylesheet">
+    <link href="tutorial.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <header class="uscb-layout-row uscb-header-container">
+      <div class="uscb-flex-row-20 uscb-flex-row-md-100
+                  uscb-layout-align-center-center uscb-layout-align-md-start-center">
+        <div class="uscb-menu-icon-container uscb-hide-gt-md
+                    uscb-flex-row-md-20"></div>
+        <div class="uscb-flex-row-md-80">
+          <a href="https://www.census.gov">
+            <img class="uscb-nav-image" src="images/census.svg">
+          </a>
+        </div>
+      </div>
+      <div class="uscb-flex-row-80 uscb-layout-align-start-center uscb-hide-md">
+        <h1 class="uscb-h2 uscb-color-white"><a href="index.html">Disclosure Avoidance</a></h1>
+      </div>
+    </header>
+
+    <div class="uscv-layout-row uscb-min-height-100vh uscb-layout-align-center-center">
+      <div class="uscb-flex-row-80 uscb-flex-row-md-100 uscb-padding-3em">
+
+        <div class="   " style="box-shadow: black 0px 8px 6px -6px; border: 1px solid rgb(238, 238, 238); padding: 1em">
+          <ul role="menu" class="uscb-tabs uscb-layout-row uscb-layout-align-space-between">
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="intro.html" role="menuitem" class="uscb-tabs-link">Noise in the Census</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section1.html" role="menuitem" class="uscb-tabs-link">Noise in a Block</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section2.html" role="menuitem" class="uscb-tabs-link">Noise and Accuracy</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center selected">
+              <a href="section3.html" role="menuitem" class="uscb-tabs-link">Preventing Database Reconstruction</a>
+            </li>
+            <!--
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section4.html" role="menuitem" class="uscb-tabs-link">Protecting Group Quarters</a>
+            </li>
+            -->
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="end.html" role="menuitem" class="uscb-tabs-link">Data Privacy in 2020</a>
+            </li>
+
+          <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center selected">
+            <a href="simulator.html" role="menuitem" class="uscb-tabs-link">Privacy Simulator</a>
+          </li>
+
+          </ul>
+        </div>
+
+        <section>
+          <div style="margin-top: 1em; margin-bottom:1em;">
+            <div class="uscb-layout-row uscb-layout-align-space-between" style="background-color: rgb(17,46,81); color: rgb(255,255,255);
+                                                                                padding: 1em;">
+              <p class="uscb-title-1 uscb-margin-TB-02">Preventing Database Reconstruction</p>
+            </div>
+            <div class="   " style="box-shadow: black 0px 8px 6px -6px; border:
+                                    1px solid rgb(238, 238, 238); padding: 1em">
+              <p>The Census Bureau has adopted differential privacy and noise injection to protect against the privacy risk of <strong>database reconstruction.</strong>. This risk exists when exact statistics based on confidential data are published: the more statistics that are published, the greater the risk.</p>
+
+              <p>To understand the risk of database reconstruction, consider the reported data for a fictional apartment building, without noise added:</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class='tutorial-toprow'><th class='' colspan='2'>Reported Data With Noise</th></tr>
+                  <tr><td class=''>Male Count:</td><td class=''>3</td></tr>
+                  <tr><td class=''>Female Count:</td><td class=''>5</td></tr>
+                  <tr><td class=''>Avg. Age:</td><td class=''>25</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/sec3a.png" alt="House" width="250px">
+              </div>
+              -->
+
+              <p>With just these statistics, it is hard to guess which people might live here. It could be 7 people who are all 25 years old, or perhaps several seniors and several young adults.</p>
+
+              <p>But what happens when we add more statistics to the published data?</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class='confidential'><th class='' colspan='2'>Reported Statistics</th></tr>
+                  <tr class='tutorial-toprow confidential'><th class='' colspan='2'>Based on Confidential Data</th></tr>
+                  <tr><td class=''>Male Count:</td><td class='confidential'>3</td></tr>
+                  <tr><td class=''>Female Count:</td><td class='confidential'>5</td></tr>
+                  <tr><td class=''>Avg. Age:</td><td class='confidential'>25</td></tr>
+                  <tr><td class=''>Male Median Age:</td><td class='confidential'>30</td></tr>
+                  <tr><td class=''>Male Avg. Age:</td><td class='confidential'>44</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center uscb-padding-TB-30">
+                <img src="images/sec3b.png" alt="House" height="250px">
+              </div>
+              -->
+
+              <p>With additional queries released in the published data, it is possible to learn more about the raw data:</p>
+
+              <div class="uscb-layout-column uscb-layout-align-center-center">
+                <ul class="tutorial-ul">
+                  <li>In this case, there are only 30 different combinations of three ages for which the median is 30 and the average is 44. </li>
+                  <li>The table also reveals that one of the males is age 30, because that is the median age.</li>
+                  <li>If there is another dataset (or even a newspaper article) about this apartment building which states that the oldest resident is 80 and male, then we know that the ages of the males are 22, 30 and 80.</li>
+                </ul>
+              </div>
+
+              <p>Now, let’s look at published data that has had noise added to it, and see what we can learn.</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class=''><th class='' colspan='2'>Reported Statistics</th></tr>
+                  <tr class='tutorial-toprow confidential'><th class='' colspan='2'>With on Noise Injection</th></tr>
+                  <tr><td class=''>Male Count:</td><td class=''>3</td></tr>
+                  <tr><td class=''>Female Count:</td><td class=''>5</td></tr>
+                  <tr><td class=''>Avg. Age:</td><td class=''>30</td></tr>
+                  <tr><td class=''>Male Median Age:</td><td class=''>31</td></tr>
+                  <tr><td class=''>Male Avg. Age:</td><td class=''>42</td></tr>
+                </table>
+              </div>
+
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center">
+                <img src="images/sec3c.png" alt="House" width="250px">
+              </div>
+              -->
+
+              <p>It turns out that there are 31 combinations of ages for which the median is 31 and the average is 42. But this doesn't tell us anything about the actual people living in the apartment building, because of the injected noise. It might be the case that one of the males is aged 31. Then again, the true number might have been 30, or 29, or even 38. A person trying to discover the underlying confidential data has know way of knowing.</p>
+
+              <p>Without knowledge of how much noise has been introduced to a residence, <strong>it is not possible to make accurate guesses about the raw data</strong>. Thus, injecting noise protects the individuals in the residence. </p>
+
+              <br>
+              <a class="uscb-primary-link" style="float:left" href="section3.html">Previous Section</a>
+              <a class="uscb-primary-link" style="float:right" href="end.html">Next Section</a>
+              <hr class="uscb-light-teal-hr" />
+
+            </div>
+        </section>
+        </div>
+
+      </div>
+  </body>
+
+</html>

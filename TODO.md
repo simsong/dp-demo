@@ -1,0 +1,1 @@
+- Have a simpler version of the simulator that just has urban or rural.

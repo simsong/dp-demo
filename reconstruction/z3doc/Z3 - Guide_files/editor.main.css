@@ -1,0 +1,1554 @@
+/*---------------------------------------------------------
+ * Copyright (C) Microsoft Corporation. All rights reserved.
+ *--------------------------------------------------------*/
+
+::-ms-clear {
+    display: none;
+}
+.monaco-editor {
+	position: relative;
+	-webkit-text-size-adjust: 100%;
+}
+.monaco-editor > .lines-decorations {
+	overflow: hidden;
+	cursor: default;
+}
+.monaco-editor > .glyph-margin {
+	background: #E6E7E8;
+}
+.monaco-editor > .line-numbers {
+	text-align:right;
+	overflow: hidden;
+	cursor: default;
+}
+.monaco-editor.focused .selected-text {
+	-webkit-animation-duration: 0;
+	-webkit-animation-name: inherit !important;
+	-moz-animation-duration: 0;
+	-moz-animation-name: inherit !important;
+	-ms-animation-duration: 0;
+	-ms-animation-name: inherit !important;
+	animation-duration: 0;
+	animation-name: inherit !important;
+}
+.monaco-editor .selected-text {
+	-webkit-animation-duration: 0;
+	-webkit-animation-name: inherit !important;
+	-moz-animation-duration: 0;
+	-moz-animation-name: inherit !important;
+	-ms-animation-duration: 0;
+	-ms-animation-name: inherit !important;
+	animation-duration: 0;
+	animation-name: inherit !important;
+}
+.monaco-editor .top-left-radius {
+	border-top-left-radius: 3px;
+}
+.monaco-editor .bottom-left-radius {
+	border-bottom-left-radius: 3px;
+}
+.monaco-editor .top-right-radius {
+	border-top-right-radius: 3px;
+}
+.monaco-editor .bottom-right-radius {
+	border-bottom-right-radius: 3px;
+}
+.monaco-editor > .inputarea {
+	width: 4px;
+	min-width: 0;
+	height: 4px;
+	min-height: 0;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	outline: none;
+	resize: none;
+	border: none;
+	overflow: hidden;
+}
+.monaco-editor .lines-content {
+	-webkit-user-select: text;
+	-ms-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-o-user-select: text;
+	user-select: text;
+}
+.monaco-editor .lines-content > .cursor {
+	position: absolute;
+	width: 2px;
+	z-index: 50;
+	cursor: text;
+}
+.monaco-editor .lines-content > .cursor.secondary {
+	width: 1px;
+	opacity: 0.6;
+}
+.monaco-editor .lines-content > .view-lines {
+	cursor: text;
+	white-space: pre-wrap;
+}
+.monaco-editor .lines-content > .view-lines > .view-line {
+	position: absolute;
+	overflow: visible;
+	width: 100%;
+}
+.monaco-editor .view-layer-line {
+	position: absolute;
+	overflow: visible;
+	width: 100%;
+}
+.monaco-editor .redsquiggly {
+	background: url(css/red-squiggly.png) repeat-x bottom left;
+}
+.monaco-editor .glyph-warning {
+	background: url(css/warning-glyph.png) no-repeat center;
+}
+.monaco-editor .glyph-error {
+	background: url(css/error-glyph.png) no-repeat center;
+}
+.monaco-editor .greensquiggly {
+	background: url(css/green-squiggly.png) repeat-x bottom left;
+}
+.monaco-editor .linked-editing {
+	box-shadow:	inset 0 0 0 1px #B9B9B9;
+}
+.monaco-editor.ie8 .linked-editing {
+	outline: #B9B9B9 solid 1px;
+	filter: alpha(opacity=10);
+	background-color: rgb(0, 100, 0);
+}
+.monaco-editor .bracket-match {
+	box-shadow:	inset 0 0 0 1px #B9B9B9;
+	background-color: rgba(0, 100, 0, 0.1);
+	-webkit-animation-duration: 0.8s;
+	-webkit-animation-name: monaco-editor-highlight;
+	-moz-animation-duration: 0.8s;
+	-moz-animation-name: monaco-editor-highlight;
+	-ms-animation-duration: 0.8s;
+	-ms-animation-name: monaco-editor-highlight;
+	animation-duration: 0.8s;
+	animation-name: monaco-editor-highlight;
+}
+.monaco-editor.ie8 .bracket-match {
+	outline: #B9B9B9 solid 1px;
+	filter: alpha(opacity=10);
+	background-color: rgb(0, 100, 0);
+}
+@-webkit-keyframes monaco-editor-highlight {
+	from {
+		background-color: #FDFF99;
+		font-weight: bold;
+		color: black;
+	}
+}
+@-moz-keyframes monaco-editor-highlight {
+	from {
+		background-color: #FDFF99;
+		font-weight: bold;
+		color: black;
+	}
+}
+@-ms-keyframes monaco-editor-highlight {
+	from {
+		background-color: #FDFF99;
+		font-weight: bold;
+		color: black;
+	}
+}
+@keyframes monaco-editor-highlight {
+	from {
+		background-color: #FDFF99;
+		font-weight: bold;
+		color: black;
+	}
+}
+.monaco-editor .editor-widget input {
+	color: inherit;
+	background-color: transparent;
+}
+
+
+.monaco-editor {
+	font-family: Monaco, Menlo, Consolas, "Droid Sans Mono", "Inconsolata", "Courier New", monospace;
+	font-size: 14px;
+	line-height: 19px;
+	color: #333;
+	background: white;
+}
+.monaco-editor.mac {
+	font-size: 12px;
+	line-height: 18px;
+}
+.monaco-editor-background {
+	background: white;
+}
+.monaco-editor .cursor {
+	background: black;
+}
+.monaco-editor .current-line {
+	background: #eaeaf2;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.monaco-editor .line-numbers {
+	background: #fff;
+	color: #2B91AF;
+}
+.monaco-editor .lineHighlight {
+	background-color: rgba(253, 255, 0, 0.2);
+}
+.monaco-editor.ie8 .lineHighlight {
+	filter: alpha(opacity=20);
+	background-color: rgb(253, 255, 0);
+}
+.monaco-editor.focused .selected-text {
+	background: #ADD6FF !important;
+}
+.monaco-editor .selected-text {
+	background: #E5EBF1 !important;
+}
+.monaco-diff-editor .diffOverview {
+	background-color: #f9f7f7;
+}
+.monaco-editor .wordHighlight {
+	background-color: rgba(253, 255, 0, 0.28);
+	-webkit-animation-duration: 0.2s;
+	-webkit-animation-name: monaco-editor-word-highlight;
+	-moz-animation-duration: 0.2s;
+	-moz-animation-name: monaco-editor-word-highlight;
+	-ms-animation-duration: 0.2s;
+	-ms-animation-name: monaco-editor-word-highlight;
+	animation-duration: 0.2s;
+	animation-name: monaco-editor-word-highlight;
+}
+.monaco-editor.ie8 .wordHighlight {
+	filter: alpha(opacity=28);
+	background-color: rgb(253, 255, 0);
+}
+@-webkit-keyframes monaco-editor-word-highlight	{ from { background-color: inherit; } to { background-color: rgba(253, 255, 0, 0.28); } }
+@-moz-keyframes monaco-editor-word-highlight	{ from { background-color: inherit; } to { background-color: rgba(253, 255, 0, 0.28); } }
+@-ms-keyframes monaco-editor-word-highlight		{ from { background-color: inherit; } to { background-color: rgba(253, 255, 0, 0.28); } }
+@keyframes monaco-editor-word-highlight			{ from { background-color: inherit; } to { background-color: rgba(253, 255, 0, 0.28); } }
+.monaco-editor .wordHighlightStrong {
+	background-color: rgba(249, 206, 130, 0.7);
+	-webkit-animation-duration: 0.2s;
+	-webkit-animation-name: monaco-editor-word-highlight-strong;
+	-moz-animation-duration: 0.2s;
+	-moz-animation-name: monaco-editor-word-highlight-strong;
+	-ms-animation-duration: 0.2s;
+	-ms-animation-name: monaco-editor-word-highlight-strong;
+	animation-duration: 0.2s;
+	animation-name: monaco-editor-word-highlight-strong;
+}
+.monaco-editor.ie8 .wordHighlightStrong {
+	filter: alpha(opacity=70);
+	background-color: rgb(249, 206, 130);
+}
+@-webkit-keyframes monaco-editor-word-highlight-strong	{ from { background-color: inherit; } to { background-color: rgba(249, 206, 130, 0.7); } }
+@-moz-keyframes monaco-editor-word-highlight-strong		{ from { background-color: inherit; } to { background-color: rgba(249, 206, 130, 0.7); } }
+@-ms-keyframes monaco-editor-word-highlight-strong		{ from { background-color: inherit; } to { background-color: rgba(249, 206, 130, 0.7); } }
+@keyframes monaco-editor-word-highlight-strong			{ from { background-color: inherit; } to { background-color: rgba(249, 206, 130, 0.7); } }
+.monaco-editor .valueSetReplacement {
+	outline: solid 2px #888;
+}
+.monaco-editor .focus-mode {
+	background-color: #FFFFFF;
+	opacity: 0.333;
+}
+.monaco-editor .token							{ color: #000000; }
+.monaco-editor .token.meta						{ color: #e00000; }
+.monaco-editor .token.keyword					{ color: #0000FF; }
+.monaco-editor .token.keyword.flow				{ color: #AF00DB; }
+.monaco-editor .token.keyword.datatype			{ color: blue; }
+.monaco-editor .token.variable					{ color: #001188; }
+.monaco-editor .token.variable.predefined		{ color: #005588; }
+.monaco-editor .token.constant					{ color: #dd0000; }
+.monaco-editor .token.string					{ color: #A31515; }
+.monaco-editor .token.string.escape				{ color: #A31515; }
+.monaco-editor .token.comment					{ color: #008000; }
+.monaco-editor .token.literal					{ color: #e00000; }
+.monaco-editor .token.literal.hex				{ color: #e07000; }
+.monaco-editor .token.number					{ color: #09885A; }
+.monaco-editor .token.number.hex				{ color: #3030c0; }
+.monaco-editor .token.number.octal				{ color: #204070; }
+.monaco-editor .token.number.binary				{ color: #e07070; }
+.monaco-editor .token.regexp					{ color: #811f3f; }
+.monaco-editor .token.delimiter					{ color: #008080; }
+.monaco-editor .token.tag						{ color: #800000; }
+.monaco-editor .token.key						{ color: #863B00; }
+.monaco-editor .token.attribute.name			{ color: red; }
+.monaco-editor .token.attribute.value			{ color: midnightblue; }
+.monaco-editor .token.info-token				{ color: #316bcd; }
+.monaco-editor .token.warn-token				{ color: #cd9731; }
+.monaco-editor .token.error-token				{ color: #cd3131; }
+.monaco-editor .token.debug-token				{ color: purple; }
+
+.monaco-scrollable-element .up-arrow {
+	background: url(../base/ui/scrollbar/arrow-up.png);
+	cursor: pointer;
+}
+.monaco-scrollable-element .down-arrow {
+	background: url(../base/ui/scrollbar/arrow-down.png);
+	cursor: pointer;
+}
+.monaco-scrollable-element .left-arrow {
+	background: url(../base/ui/scrollbar/arrow-left.png);
+	cursor: pointer;
+}
+.monaco-scrollable-element .right-arrow {
+	background: url(../base/ui/scrollbar/arrow-right.png);
+	cursor: pointer;
+}
+.monaco-scrollable-element.tomorrow-night .up-arrow {
+	background: url(../base/ui/scrollbar/arrow-up-dark.png);
+}
+.monaco-scrollable-element.tomorrow-night .down-arrow {
+	background: url(../base/ui/scrollbar/arrow-down-dark.png);
+}
+.monaco-scrollable-element.tomorrow-night .left-arrow {
+	background: url(../base/ui/scrollbar/arrow-left-dark.png);
+}
+.monaco-scrollable-element.tomorrow-night .right-arrow {
+	background: url(../base/ui/scrollbar/arrow-right-dark.png);
+}
+.monaco-scrollable-element .visible {
+	opacity: 1;
+	background:rgba(0,0,0,0);
+	-webkit-transition: opacity 100ms linear;
+	-o-transition: opacity 100ms linear;
+	-moz-transition: opacity 100ms linear;
+	-ms-transition: opacity 100ms linear;
+}
+.monaco-scrollable-element .invisible {
+	opacity: 0;
+	-webkit-transition: opacity 800ms linear;
+	-o-transition: opacity 800ms linear;
+	-moz-transition: opacity 800ms linear;
+	-ms-transition: opacity 800ms linear;
+}
+.monaco-scrollable-element .shadow {
+	position: absolute;
+	display: none;
+}
+.monaco-scrollable-element .shadow.top {
+	display: block;
+	top: 0;
+	left: 3px;
+	height: 3px;
+	width: 100%;
+	box-shadow: #ccc 0 6px 6px -6px inset;
+}
+.monaco-scrollable-element .shadow.left {
+	display: block;
+	top: 3px;
+	left: 0;
+	height: 100%;
+	width: 3px;
+	box-shadow: #ccc 6px 0 6px -6px inset;
+}
+.monaco-scrollable-element .shadow.top-left-corner {
+	display: block;
+	top: 0;
+	left: 0;
+	height: 3px;
+	width: 3px;
+}
+.monaco-scrollable-element .shadow.top.left {
+	box-shadow: #ccc 6px 6px 6px -6px inset;
+}
+.monaco-scrollable-element .slider {
+	background: rgba(100, 100, 100, .4);
+}
+.monaco-scrollable-element.ie8 .slider {
+	filter: alpha(opacity=40); background: rgb(100, 100, 100);
+}
+.monaco-scrollable-element .slider:hover {
+	background: rgba(100, 100, 100, .7);
+}
+.monaco-scrollable-element.ie8 .slider:hover {
+	filter: alpha(opacity=70); background: rgb(100, 100, 100);
+}
+.monaco-scrollable-element .slider.active {
+	background: rgba(0, 0, 0, .6);
+}
+.monaco-scrollable-element.ie8 .slider.active {
+	filter: alpha(opacity=60); background: rgb(0, 0, 0);
+}
+
+
+.monaco-diff-editor .diffOverview {
+	z-index: 99;
+}
+.monaco-diff-editor.vs-dark {
+	background: #1E1E1E;
+}
+.monaco-scrollable-element.modified-in-monaco-diff-editor .scrollbar {
+	background: rgba(0,0,0,0);
+}
+.monaco-scrollable-element.modified-in-monaco-diff-editor .slider {
+	z-index: 100;
+}
+.modified-in-monaco-diff-editor .slider.active {
+	background: rgba(171, 171, 171, .4);
+}
+.monaco-editor .line-delete, .monaco-editor .char-delete {
+	background: rgba(255, 0, 0, 0.2);
+}
+.monaco-editor.ie8 .line-delete, .monaco-editor.ie8 .char-delete {
+	filter: alpha(opacity=20);
+	background-color: rgb(255, 0, 0);
+}
+.monaco-editor .line-insert, .monaco-editor .char-insert {
+	background: rgba(155, 185, 85, 0.2);
+}
+.monaco-editor.ie8 .line-insert, .monaco-editor.ie8 .char-insert {
+	filter: alpha(opacity=20);
+	background: rgb(155, 185, 85);
+}
+.monaco-editor .diagonal-fill {
+	background: url(diff/diagonal-fill.png);
+}
+.monaco-editor.vs-dark .diagonal-fill {
+	opacity: 0.2;
+}
+
+.monaco-findInput {
+	height: 20px;
+	margin: 1px;
+	padding-right: 2px;
+}
+.monaco-findInput .text-measure, .monaco-findInput .input {
+	font-size: 13px;
+	font-family: "Segoe UI","HelveticaNeue-Light", sans-serif;
+}
+.monaco-findInput .input {
+	outline: none;
+	margin-left: 2px;
+	height: 20px;
+	border: 0;
+	position: relative;
+	background-color: transparent !important;
+}
+.monaco-findInput > .validation-decoration {
+	background: url(../base/ui/widgets/red-squiggly.png) repeat-x bottom left;
+	position: absolute;
+	margin: 2px 0 0 3px;
+}
+.monaco-findInput > .custom-checkbox {
+	margin-left: 2px;
+	float: right;
+	position: relative;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	overflow: hidden;
+	opacity: 0.7;
+	width: 21px;
+	height: 21px;
+	border: 1px solid transparent;
+	padding: 1px;
+	-webkit-box-sizing:	border-box;
+	-o-box-sizing:		border-box;
+	-moz-box-sizing:	border-box;
+	-ms-box-sizing:		border-box;
+	box-sizing:			border-box;
+}
+.monaco-findInput > .custom-checkbox.case-sensitive {
+	background: url(../base/ui/widgets/case-sensitive.png) center center no-repeat;
+}
+.monaco-findInput > .custom-checkbox.whole-word {
+	background: url(../base/ui/widgets/whole-word.png) center center no-repeat;
+}
+.monaco-findInput > .custom-checkbox.regex {
+	background: url(../base/ui/widgets/regex.png) center center no-repeat;
+}
+.monaco-findInput > .custom-checkbox:hover,
+.monaco-findInput > .custom-checkbox.checked {
+	opacity: 1;
+}
+.monaco-findInput > .custom-checkbox:hover {
+	background-color: #EEE;
+}
+.monaco-findInput > .custom-checkbox.checked {
+	border-color: #3399FF;
+}
+.monaco-workbench.vs-dark .monaco-findInput > .custom-checkbox.case-sensitive,
+.monaco-workbench.tomorrow-night .monaco-findInput > .custom-checkbox.case-sensitive {
+	background: url(../base/ui/widgets/case-sensitive-dark.png) center center no-repeat;
+}
+.monaco-workbench.vs-dark .monaco-findInput > .custom-checkbox.whole-word,
+.monaco-workbench.tomorrow-night .monaco-findInput > .custom-checkbox.whole-word {
+	background: url(../base/ui/widgets/whole-word-dark.png) center center no-repeat;
+}
+.monaco-workbench.vs-dark .monaco-findInput > .custom-checkbox.regex,
+.monaco-workbench.tomorrow-night .monaco-findInput > .custom-checkbox.regex  {
+	background: url(../base/ui/widgets/regex-dark.png) center center no-repeat;
+}
+.monaco-workbench.vs-dark .monaco-findInput > .custom-checkbox:hover,
+.monaco-workbench.tomorrow-night .monaco-findInput > .custom-checkbox:hover {
+	background-color: #000;
+}
+.monaco-workbench.vs-dark .monaco-findInput > .custom-checkbox.checked {
+	border-color: #55AAFF;
+}
+.monaco-workbench.tomorrow-night .monaco-findInput > .custom-checkbox.checked {
+	border-color: #484B4C;
+}
+
+.hidden {
+	display: none !important;
+	visibility: hidden !important;
+}
+.builder-visible {
+	display: inherit;
+	visibility: visible;
+}
+
+
+.monaco-editor > .find-widget {
+	position: absolute;
+	z-index: 100;
+	top: 0;
+	height: 0;
+	overflow: hidden;
+	-webkit-transition: height 200ms linear;
+	-o-transition: height 200ms linear;
+	-moz-transition: height 200ms linear;
+	-ms-transition: height 200ms linear;
+	transition: height 200ms linear;
+	padding: 0 4px;
+}
+.monaco-editor > .find-widget input {
+	padding: 0;
+}
+.monaco-editor > .find-widget.visible {
+	top: 0;
+	height: 34px;
+}
+.monaco-editor > .find-widget.visible.noanimation {
+	-webkit-transition: none;
+	-o-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	transition: none;
+}
+.monaco-editor > .find-widget > .find-part,
+.monaco-editor > .find-widget > .replace-part {
+	margin-left: 17px;
+}
+.monaco-editor > .find-widget > .find-part {
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+.monaco-editor.ie8 > .find-widget > .find-part {
+}
+.monaco-editor > .find-widget.visible.replace {
+	height: 64px;
+}
+.monaco-editor > .find-widget .monaco-findInput {
+	display: inline-block;
+	background-color: white;
+	border: 1px solid transparent;
+	padding: 2px 2px 2px 0;
+}
+.monaco-editor > .find-widget.no-results .monaco-findInput {
+	border-color: #E51400;
+}
+.monaco-editor > .find-widget .button {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	position: relative;
+	top: 5px;
+	margin-left: 3px;
+	background-position: center center;
+	background-repeat: no-repeat;
+	cursor: pointer;
+	font-family: "Segoe WPC", "Segoe UI", "HelveticaNeue-Light", sans-serif;
+	text-align: center;
+	font-size: 11px;
+}
+.monaco-editor.ie8 > .find-widget .button {
+}
+.monaco-editor > .find-widget .button:hover {
+	background-color: #DDD;
+}
+.monaco-editor.ie8 > .find-widget .button:hover {
+}
+.monaco-editor > .find-widget .button.left {
+	margin-left: 0;
+	margin-right: 3px;
+}
+.monaco-editor > .find-widget .button.wide {
+	width: auto;
+	padding: 1px 6px;
+	top: -1px;
+}
+.monaco-editor > .find-widget .button.toggle {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 18px;
+	height: 100%;
+	-webkit-box-sizing:	border-box;
+	-o-box-sizing:		border-box;
+	-moz-box-sizing:	border-box;
+	-ms-box-sizing:		border-box;
+	box-sizing:			border-box;
+}
+.monaco-editor.ie8 > .find-widget .button.toggle {
+}
+.monaco-editor > .find-widget.can-replace .button.toggle {
+	display: inherit;
+}
+.monaco-editor > .find-widget .previous {
+	background-image: url(contrib/find/arrow-up.png);
+}
+.monaco-editor > .find-widget .next {
+	background-image: url(contrib/find/arrow-down.png);
+}
+.monaco-editor > .find-widget .close {
+	background-image: url(contrib/find/close.png);
+}
+.monaco-editor > .find-widget .expand {
+	background-image: url(contrib/find/expando-expanded.png);
+}
+.monaco-editor > .find-widget .collapse {
+	background-image: url(contrib/find/expando-collapsed.png);
+}
+.monaco-editor > .find-widget > .replace-part {
+	display: none;
+	border-top: none;
+}
+.monaco-editor.ie8 > .find-widget > .replace-part {
+}
+.monaco-editor > .find-widget.visible.replace > .replace-part {
+	display: inline-block;
+}
+.monaco-editor > .find-widget > .replace-part > .replace-input {
+	outline: none;
+	margin: 1px;
+	padding: 2px 3px 4px;
+	height: 20px;
+	border: 0;
+	background-color: white;
+	font-size: 13px;
+	font-family: "Segoe UI","HelveticaNeue-Light", sans-serif;
+}
+.monaco-editor .findMatch {
+	background-color: rgba(234, 92, 0, 0.3);
+	-webkit-animation-duration: 0;
+	-webkit-animation-name: inherit !important;
+	-moz-animation-duration: 0;
+	-moz-animation-name: inherit !important;
+	-ms-animation-duration: 0;
+	-ms-animation-name: inherit !important;
+	animation-duration: 0;
+	animation-name: inherit !important;
+}
+.monaco-editor.ie8 .findMatch {
+	filter: alpha(opacity=30);
+	background: rgb(234, 92, 0);
+}
+.monaco-editor .currentFindMatch {
+	background-color: #A8AC94;
+}
+.monaco-editor > .find-widget {
+	background-color: #EFEFF2;
+	box-shadow: 0 2px 8px #A8A8A8;
+}
+.monaco-editor.vs-dark > .find-widget {
+	background-color: #2D2D30;
+	box-shadow: 0 2px 8px #000;
+}
+.monaco-editor.monaco > .find-widget {
+	background-color: #F9F9F9;
+}
+.monaco-editor.vs-dark > .find-widget .monaco-findInput,
+.monaco-editor.vs-dark > .find-widget > .replace-part > .replace-input {
+	background-color: #333337;
+}
+.monaco-editor.vs-dark > .find-widget .previous {
+	background-image: url(contrib/find/arrow-up-dark.png);
+}
+.monaco-editor.vs-dark > .find-widget .next {
+	background-image: url(contrib/find/arrow-down-dark.png);
+}
+.monaco-editor.vs-dark > .find-widget .close {
+	background-image: url(contrib/find/close-dark.png);
+}
+.monaco-editor.vs-dark > .find-widget .expand {
+	background-image: url(contrib/find/expando-expanded-dark.png);
+}
+.monaco-editor.vs-dark > .find-widget .collapse {
+	background-image: url(contrib/find/expando-collapsed-dark.png);
+}
+.monaco-editor.vs-dark > .find-widget .button:hover {
+	background-color: #2f3334;
+}
+.monaco-editor.vs-dark > .find-widget .button:hover {
+	background-color: #2f3334;
+}
+.monaco-editor.vs-dark .currentFindMatch {
+	background-color: #515C6A;
+}
+
+.monaco-editor-hover {
+	padding: 0 3px 0 3px;
+	box-shadow: 2px 2px 5px #CCC;
+	border: 1px solid #CCC;
+	position: absolute;
+	margin-top: -1px;
+	cursor: default;
+	z-index: 500;
+	border-radius: 4px;
+	-webkit-animation-duration: 0.15s;
+	-webkit-animation-name: fadeIn;
+	-moz-animation-duration: 0.15s;
+	-moz-animation-name: fadeIn;
+	-ms-animation-duration: 0.15s;
+	-ms-animation-name: fadeIn;
+	animation-duration: 0.15s;
+	animation-name: fadeIn;
+}
+.monaco-editor.vs-dark .monaco-editor-hover {
+	box-shadow: none;
+	border-color: #555;
+}
+.monaco-editor.vs-dark .monaco-editor-hover a {
+	color: #1C5DAF;
+}
+
+
+.monaco-editor .new-snippet {
+	background-color: rgba(10, 50, 150, 0.1);
+}
+.monaco-editor.ie8 .new-snippet {
+	filter: alpha(opacity=10);
+	background-color: rgb(10, 50, 150);
+}
+.monaco-editor .snippet-placeholder {
+	background-color: rgba(10, 50, 100, 0.1);
+}
+.monaco-editor.ie8 .snippet-placeholder {
+	filter: alpha(opacity=10);
+	background-color: rgb(10, 50, 100);
+}
+.monaco-editor .finish-snippet-placeholder {
+	outline: rgba(10, 50, 100, 0.5) solid 1px;
+}
+.monaco-editor.ie8 .finish-snippet-placeholder {
+	outline: rgb(132, 152, 177) solid 1px;
+}
+
+.monaco-editor .zone-widget {
+	position: absolute;
+	width: 100%;
+	z-index: 100;
+}
+.monaco-editor .zone-widget-arrow {
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+	position: absolute;
+}
+.monaco-editor .zone-widget-arrow.below {
+	border-bottom-color: yellowGreen;
+}
+.monaco-editor .zone-widget-arrow.above {
+	border-top-color: yellowGreen;
+}
+.monaco-editor .zone-widget .container {
+	border-top-style: solid;
+	border-bottom-style: solid;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+	border-top-color: yellowGreen;
+	border-bottom-color: yellowGreen;
+	position: relative;
+	margin-right:10px;
+}
+
+
+.monaco-editor .preview-zone-widget .preview .monaco-editor,
+.monaco-editor .preview-zone-widget .preview .monaco-editor-background,
+.monaco-editor .preview-zone-widget .preview .monaco-editor .line-numbers {
+	background: rgb(242, 253, 220);
+}
+.monaco-workbench.vs-dark .monaco-editor .preview-zone-widget,
+.monaco-workbench.vs-dark .monaco-editor .preview-zone-widget .preview .monaco-editor,
+.monaco-workbench.vs-dark .monaco-editor .preview-zone-widget .preview .monaco-editor-background,
+.monaco-workbench.vs-dark .monaco-editor .preview-zone-widget .preview .monaco-editor .line-numbers { 
+	background: #0F1810;
+}
+
+.monaco-vtree {
+	height: 100%;
+	width: 100%;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: -moz-none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+.monaco-vtree > .monaco-scrollable-element {
+	height: 100%;
+}
+.monaco-vtree > .monaco-scrollable-element > .monaco-vtree-wrapper {
+	height: 100%;
+}
+.monaco-vtree .rows {
+	position: relative;
+}
+.monaco-vtree .rows > .row {
+	-moz-box-sizing:	border-box;
+	-o-box-sizing:		border-box;
+	-ms-box-sizing:		border-box;
+	box-sizing:			border-box;
+	cursor: pointer;
+	overflow: hidden;
+	position: absolute;
+	width: 100%;
+}
+.monaco-vtree .rows > .row > .content {
+	position: relative;
+	-moz-transition:	opacity 0.15s ease-out;
+	-webkit-transition:	opacity 0.15s ease-out;
+	-ms-transition:		opacity 0.15s ease-out;
+	-o-transition:		opacity 0.15s ease-out;
+	transition:			opacity 0.15s ease-out;
+}
+.monaco-vtree .rows > .row.has-children > .content:before,
+.monaco-vtree .rows > .row.has-children > .content:after {
+	position: absolute;
+	display: block;
+	content: "";
+	width: 0;
+	height: 0;
+	border-style: solid;
+}
+.monaco-vtree .rows > .row.has-children > .content:before {
+	border-width: 4px;	
+	border-left-width: 5px;
+	top: 8px;
+	left: -10px;
+}
+.monaco-vtree .rows > .row.has-children > .content:after {
+	border-width: 2px;	
+	border-left-width: 2px;
+	top: 10px;
+	left: -9px;
+}
+.monaco-vtree .rows > .row.expanded > .content:before {
+	border-width: 6px 6px 0 5px;
+	top: 9px;
+	left: -16px;
+}
+.monaco-vtree .rows > .row.expanded > .content:after {
+	border-width: 0;
+}
+.monaco-vtree .rows > .row.selected.expanded > .content:before {
+	border-left-width: 5px;
+}
+.monaco-vtree.focused .rows > .row.selected.expanded > .content:before {
+	border-left-width: 5px;
+}
+.monaco-vtree.highlighted .rows > .row:not(.highlighted) > .content {
+	opacity: 0.3;
+}
+.monaco-vtree .rows > .row.fake {
+	visibility: hidden;
+	top: -1000px;
+	left: -1000px;
+	z-index: -100;
+}
+.monaco-vtree.bare .monaco-vtree-wrapper.drop-target,
+.monaco-vtree.bare .row {
+	color: inherit !important;
+	background-color: inherit !important;
+}
+.monaco-vtree.focused .rows > .row.focused:not(.highlighted) 	{ background-color: #eaeaea; }	
+.monaco-vtree.focused .rows > .row.selected:not(.highlighted) 	{ background-color: #3399FF; color: white; }
+.monaco-vtree .rows > .row.focused:not(.highlighted) 			{ background-color: #eaeaea; }
+.monaco-vtree .rows > .row.selected:not(.highlighted)  			{ background-color: #CCCEDB; }
+.monaco-vtree .rows > .row:hover:not(.highlighted)  			{ background-color: #f0f0f0; }
+.monaco-vtree .monaco-vtree-wrapper.drop-target,
+.monaco-vtree .rows > .row.drop-target							{ background-color: #DDECFF; }
+.monaco-vtree .rows > .row.has-children > .content:before { border-color: transparent; border-left-color: #A6A6A6; }
+.monaco-vtree .rows > .row.has-children > .content:after { border-color: transparent; border-left-color: #F6F6F6; }
+.monaco-vtree.focused .rows > .row.selected.has-children > .content:before { border-left-color: white; }
+.monaco-vtree .rows > .row.selected.has-children > .content:before { border-left-color: #646465; }
+.monaco-vtree .rows > .row.has-children:hover > .content:after { border-left-color: #f0f0f0; }
+.monaco-vtree .rows > .row.selected.has-children > .content:after { border-left-color: #CCCEDB; }
+.monaco-vtree.focused .rows > .row.selected.has-children > .content:after { border-left-color: #3399FF; }
+.monaco-vtree .rows > .row.expanded > .content:before { border-color: transparent; border-right-color: #646465; }
+.monaco-vtree .rows > .row.expanded > .content:after { border-color: transparent; }
+.monaco-vtree .rows > .row.selected.expanded > .content:before { border-left-color: transparent; }
+.monaco-vtree.focused .rows > .row.selected.expanded > .content:before { border-right-color: white; border-left-color: transparent; }
+.vs-dark .monaco-vtree.focused .row.focused:not(.highlighted) 	{ background-color: #2f3334; }
+.vs-dark .monaco-vtree.focused .row.selected:not(.highlighted)	{ background-color: #0E639C; color: white; }
+.vs-dark .monaco-vtree .row.focused:not(.highlighted) 			{ background-color: #2f3334; }
+.vs-dark .monaco-vtree .row.selected:not(.highlighted)			{ background-color: #3F3F46; }
+.vs-dark .monaco-vtree .row:hover:not(.highlighted) 			{ background-color: #2f3334; }
+.vs-dark .monaco-vtree-wrapper.drop-target,
+.vs-dark .monaco-vtree .row.drop-target							{ background-color: #383B3D; }
+.vs-dark .monaco-vtree .rows > .row.has-children > .content:before						{ border-left-color: #D4D4D4; }
+.vs-dark .monaco-vtree .rows > .row.has-children > .content:after						{ border-left-color: #252526; }
+.vs-dark .monaco-vtree .rows > .row.expanded > .content:before							{ border-left-color: transparent; border-right-color: #D4D4D4; }
+.vs-dark .monaco-vtree .rows > .row.has-children:hover:not(.focused) > .content:after	{ border-left-color: #2f3334; }
+.tomorrow-night .monaco-vtree.focused .row.selected:not(.highlighted)	{ background-color: #2f3334; }
+.tomorrow-night .monaco-vtree.focused .row.focused:not(.highlighted)	{ background-color: #484b4c; }
+.tomorrow-night .monaco-vtree .row.selected:not(.highlighted) 			{ background-color: #1D1F21; }
+.tomorrow-night .monaco-vtree .row.focused:not(.highlighted)			{ background-color: #2A2D2E; }
+.tomorrow-night .monaco-vtree .row:hover:not(.highlighted) 				{ background-color: #27292a; }
+.tomorrow-night .monaco-vtree-wrapper.drop-target,
+.tomorrow-night .monaco-vtree .row.drop-target							{ background-color: #2c2e30; }
+.tomorrow-night .monaco-vtree .rows > .row.has-children > .content:before					{ border-left-color: #D4D4D4; }
+.tomorrow-night .monaco-vtree .rows > .row.has-children > .content:after					{ border-left-color: #232729; }
+.tomorrow-night .monaco-vtree .rows > .row.expanded > .content:before						{ border-left-color: transparent; border-right-color: #D4D4D4; }
+.tomorrow-night .monaco-vtree .rows > .row.has-children:hover > .content:after				{ border-left-color: #27292a; }
+.tomorrow-night .monaco-vtree .rows > .row.focused.has-children > .content:after			{ border-left-color: #2f3334; }
+.tomorrow-night .monaco-vtree.focused .rows > .row.focused.has-children > .content:after	{ border-left-color: #484b4c; }
+
+
+.monaco-highlighted-label > span {
+	opacity: 0.6;
+}
+.monaco-highlighted-label > .highlight {
+	opacity: 1;
+}
+
+
+.monaco-editor .suggest-widget {
+	background-color: #F6F6F6;
+	font-size: 12px;
+	box-shadow: 0px 2px 8px #A8A8A8;
+	z-index: 100;
+}
+.monaco-editor.mac .suggest-widget {
+	font-size: 11px;
+}
+.monaco-editor.mac .suggest-widget .main {
+	line-height: 1.3em;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content {
+	-mox-box-sizing: border-box;
+	box-sizing: border-box;
+	line-height: 1.2em;
+	padding: 2px 10px 2px 21px;
+	background-repeat: no-repeat;
+	background-position: 2px 2px;
+	white-space: nowrap;
+}
+.monaco-editor .suggest-widget.no-icons .monaco-vtree .row > .content {
+	background: none !important;
+	padding-left: 10px;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .main {
+	height: 1.2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .description {
+	display: none;
+	max-height: 1.2em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #888;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .docs {
+	display: none;
+	max-height: 2.4em;
+	overflow: hidden;
+	margin-top: 0.1em;
+	white-space: normal;
+	font-family: "Segoe UI", "HelveticaNeue", sans-serif;
+	color: #A21B1B;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .monaco-highlighted-label > span {
+	opacity: 1;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	font-weight: bold;
+	color: #186B9E;
+}
+.monaco-editor .suggest-widget.empty .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	background-color: inherit;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .type-label {
+	display: none;
+	margin-left: 0.8em;
+	font-size: 0.9em;
+	color: #0035DD;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content .description-label {
+	white-space: nowrap;
+	font-size: 0.9em;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row.fake > .content,
+.monaco-editor .suggest-widget .monaco-vtree .row.focused > .content {
+	background-color: #eaeaea;
+	color: inherit;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row.fake > .content .description,
+.monaco-editor .suggest-widget .monaco-vtree .row.focused > .content .description {
+	display: block;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row.fake > .content .type-label,
+.monaco-editor .suggest-widget .monaco-vtree .row.focused > .content .type-label {
+	display: inline;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row.fake > .content .docs,
+.monaco-editor .suggest-widget .monaco-vtree .row.focused > .content .docs {
+	display: block;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.text {
+	background-image: url(contrib/suggest/text-icon.png);
+	background-size: 14px;
+	background-position-x: 3px;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.field {
+	background-image: url(contrib/suggest/field-icon.png);
+	background-position-x: 5px;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.function {
+	background-image: url(contrib/suggest/function-icon.png);
+	background-position-x: 5px;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.keyword {
+	background-image: url(contrib/suggest/keyword-icon.png);
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.color {
+	background-image: url(contrib/suggest/color-icon.png);
+	background-size: 14px;
+	background-position-x: 3px;
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.property {
+	background-image: url(contrib/suggest/property-icon.png);
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.unit {
+	background-image: url(contrib/suggest/unit-icon.png);
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.value {
+	background-image: url(contrib/suggest/value-icon.png);
+}
+.monaco-editor .suggest-widget .monaco-vtree .row > .content.snippet {
+	background-image: url(contrib/suggest/snippet-icon.png);
+	background-position-y: 0;
+}
+.monaco-editor.vs-dark .suggest-widget {
+	background-color: #2D2D30;
+	box-shadow: 0px 2px 8px #000;
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row.fake > .content,
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row.focused > .content {
+	background-color: #2f3334;
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	color: #219AE4;
+}
+.monaco-editor.vs-dark .suggest-widget.empty .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	color: inherit;
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content .docs {
+	color: #C07A7A;
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content .type-label {
+	color: #4E94CE;
+}
+	
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.text {
+	background-image: url(contrib/suggest/text-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.field {
+	background-image: url(contrib/suggest/field-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.function {
+	background-image: url(contrib/suggest/function-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.keyword {
+	background-image: url(contrib/suggest/keyword-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.color {
+	background-image: url(contrib/suggest/color-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.property {
+	background-image: url(contrib/suggest/property-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.unit {
+	background-image: url(contrib/suggest/unit-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.value {
+	background-image: url(contrib/suggest/value-icon-dark.png);
+}
+.monaco-editor.vs-dark .suggest-widget .monaco-vtree .row > .content.snippet {
+	background-image: url(contrib/suggest/snippet-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row.fake > .content,
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row.focused > .content {
+	background-color: #2f3334;
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	color: #219AE4;
+}
+.monaco-editor.tomorrow-night .suggest-widget.empty .monaco-vtree .row > .content .monaco-highlighted-label .highlight {
+	color: inherit;
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content .docs {
+	color: #C07A7A;
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content .type-label {
+	color: #4E94CE;
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.text {
+	background-image: url(contrib/suggest/text-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.field {
+	background-image: url(contrib/suggest/field-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.function {
+	background-image: url(contrib/suggest/function-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.keyword {
+	background-image: url(contrib/suggest/keyword-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.color {
+	background-image: url(contrib/suggest/color-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.property {
+	background-image: url(contrib/suggest/property-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.unit {
+	background-image: url(contrib/suggest/unit-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.value {
+	background-image: url(contrib/suggest/value-icon-dark.png);
+}
+.monaco-editor.tomorrow-night .suggest-widget .monaco-vtree .row > .content.snippet {
+	background-image: url(contrib/suggest/snippet-icon-dark.png);
+}
+
+.monaco-editor .quick-suggest-widget {
+	opacity: 0.5;
+}
+
+
+.monaco-editor .parameter-hints-widget {
+	font-size: 12px;
+	width: 440px;
+	z-index: 100;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: -moz-none;
+	-o-user-select: none;
+	user-select: none;
+}
+.monaco-editor .parameter-hints-widget .wrapper {
+	position: absolute;
+	bottom: 0;
+	border: 1px solid #ccc;
+	max-width: 440px;
+	padding: 0 0.5em 0 0.5em;
+}
+.monaco-editor .parameter-hints-widget.multiple .wrapper {
+	min-height: 3.3em;
+	padding: 0 0.5em 0 1.9em;
+}
+.monaco-editor .parameter-hints-widget .buttons {
+	position: absolute;
+	display: none;
+	bottom: 0;
+	left: 0;
+}
+.monaco-editor .parameter-hints-widget.multiple .buttons {
+	display: block;
+}
+.monaco-editor .parameter-hints-widget.multiple .button {
+	position: absolute;
+	left: 6px;
+	width: 11px;
+	height: 11px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.monaco-editor .parameter-hints-widget .button.previous {
+	bottom: 26px;
+	background-image: url(contrib/parameterHints/arrow-up.png);
+}
+.monaco-editor .parameter-hints-widget .button.next {
+	bottom: 2px;
+	background-image: url(contrib/parameterHints/arrow-down.png);
+}
+.monaco-editor .parameter-hints-widget .overloads {
+	position: absolute;
+	display: none;
+	font-size: 10px;
+	text-align: center;
+	bottom: 14px;
+	left: 0;
+	width: 22px;
+	height: 12px;
+	line-height: 12px;
+	opacity: 0.5;
+}
+.monaco-editor .parameter-hints-widget.multiple .overloads {
+	display: block;
+}
+.monaco-editor .parameter-hints-widget .signatures {
+	overflow: hidden;
+}
+.monaco-editor .parameter-hints-widget .signature .parameter {
+	display: inline-block;
+	color: #999;
+}
+.monaco-editor .parameter-hints-widget .signature .parameter.active {
+	color: black;
+	font-weight: bold;
+}
+.monaco-editor .parameter-hints-widget .signature .return-type,
+.monaco-editor .parameter-hints-widget .signature .parameter.active .parameter-type {
+	color: #0035DD;
+}
+.monaco-editor .parameter-hints-widget .documentation {
+	max-height: 3.2em;
+	overflow: hidden;
+	font-family: "Segoe UI", "HelveticaNeue", sans-serif;
+	color: #A21B1B;
+}
+.monaco-editor .parameter-hints-widget .documentation .parameter {
+	color: black;
+	font-weight: bold;
+	margin-right: 0.5em;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .wrapper {
+	border-color: #707070;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .signature .parameter.active {
+	color: #D8D8D8;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .signature .return-type,
+.vs-dark.monaco-editor .parameter-hints-widget .signature .parameter.active .parameter-type {
+	color: #219AE4;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .signature {
+	color: #777;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .documentation {
+	color: #AD8585;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .documentation .parameter {
+	color: #D8D8D8;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .button.previous {
+	background-image: url(contrib/parameterHints/arrow-up-dark.png);
+	opacity: 0.8;
+}
+.vs-dark.monaco-editor .parameter-hints-widget .button.next {
+	background-image: url(contrib/parameterHints/arrow-down-dark.png);
+	opacity: 0.8;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .wrapper {
+	border-color: #707070;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .signature .parameter.active {
+	color: #D8D8D8;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .signature .return-type,
+.tomorrow-night.monaco-editor .parameter-hints-widget .signature .parameter.active .parameter-type {
+	color: #B294BB;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .signature {
+	color: #777;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .button.previous {
+	background-image: url(contrib/parameterHints/arrow-up-dark.png);
+	opacity: 0.8;
+}
+.tomorrow-night.monaco-editor .parameter-hints-widget .button.next {
+	background-image: url(contrib/parameterHints/arrow-down-dark.png);
+	opacity: 0.8;
+}
+
+
+.monaco-editor .reference-zone-widget {
+	background-color: rgb(242, 253, 220);
+}
+.monaco-editor .reference-zone-widget .inline {
+	display: inline-block;
+	vertical-align: top;
+}
+.monaco-editor .reference-zone-widget .label {
+	font-family: "Segoe WPC", "Segoe UI", "HelveticaNeue-Light", sans-serif;
+	font-size: 0.9em; 
+	text-align: center;
+	color: #646465;
+}
+.monaco-editor .reference-zone-widget .preview {
+	width: 80%;
+}
+.monaco-editor .reference-zone-widget .preview .monaco-editor,
+.monaco-editor .reference-zone-widget .preview .monaco-editor-background,
+.monaco-editor .reference-zone-widget .preview .monaco-editor .line-numbers {
+	background: rgb(242, 253, 220);
+}
+.monaco-editor .reference-zone-widget .preview .reference-decoration {
+	background-color: rgba(245, 216, 2, 0.87);	
+}
+.monaco-editor .reference-zone-widget .tree {
+	width: 20%;
+	color: #646465;
+	font-family: "Segoe WPC", "Segoe UI", "HelveticaNeue-Light", sans-serif;
+	font-size: 0.9em; 
+}
+.monaco-editor .reference-zone-widget .tree .monaco-vtree {
+	outline: none;
+}
+.monaco-editor .reference-zone-widget .tree .monaco-vtree.focused .rows > .row.selected:not(.highlighted) {
+	background-color: #1282ce;
+}
+.monaco-editor .reference-zone-widget .tree .reference .lineNumber {
+	color: #A8A8A8;
+}
+.monaco-editor .reference-zone-widget .tree .selected .reference .lineNumber {
+	color: white;
+}
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .tree .block,
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .overlay {
+	background-color: #1e1e1e;
+}
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget,
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .preview .monaco-editor,
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .preview .monaco-editor-background,
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .preview .monaco-editor .line-numbers { 
+	background: #0F1810;
+}
+.monaco-workbench.vs-dark .monaco-editor .reference-zone-widget .preview .reference-decoration {
+	background-color: rgba(255, 143, 0, 0.6);
+}
+
+
+.monaco-editor .detected-link {
+	
+	border-bottom: 1px solid #3D53C9;
+	position:relative;
+	top:-0.2em;
+}
+
+ .actions .monaco-action-bar .action-item {
+	 margin-left: 0.3em;
+ }
+ 
+.monaco-action-bar {
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.monaco-action-bar .actions-container {
+	display: inline-block;
+	margin: 0 auto;
+	padding: 0;
+}
+.monaco-action-bar .action-item {
+	cursor: pointer;
+	display: inline-block;
+	-ms-transition: -ms-transform 100ms ease;
+	-webkit-transition: -webkit-transform 100ms ease;
+	-moz-transition: -moz-transform 100ms ease;
+	-o-transition: -o-transform 100ms ease;
+	transition: transform 100ms ease;
+}
+.monaco-action-bar .action-item.active {
+	-ms-transform: translate(0, -3px);
+	-webkit-transform: translate(0, -3px);
+	-moz-transform: translate(0, -3px);
+	-o-transform: translate(0, -3px);
+	transform: translate(0, -3px);
+}
+.monaco-action-bar .action-item .icon {
+	display: inline-block;
+}
+.monaco-action-bar .action-label {
+	font-size: 12px;
+	margin-right: 0.3em;
+}
+.monaco-action-bar.vertical {
+	margin-left: 0.5em;
+	text-align: left;
+}
+.monaco-action-bar.vertical .action-item {
+	padding-bottom: 0.1em;
+	display: block;
+}
+.monaco-action-bar.vertical .action-item.active {
+	-ms-transform: translate(5px, 0);
+	-webkit-transform: translate(5px, 0);
+	-moz-transform: translate(5px, 0);
+	-o-transform: translate(5px, 0);
+	transform: translate(5px, 0);
+}
+.secondary-actions .monaco-action-bar .action-label {
+	margin-left: 6px;
+}
+.monaco-action-bar .action-item .progress-item .label {
+	padding: 0.7em;
+	background-color: #1382CE;
+	display: inline-block;
+	vertical-align: top;
+	cursor: pointer;
+}
+.monaco-action-bar .action-item .progress-item .tag {
+	display: inline-block;
+	vertical-align: top;
+	padding: 0.7em 0;
+	color: white;
+	font-weight: bold;
+	text-align: center;
+	overflow: hidden;
+	width: 0;
+	transition: width 200ms;
+	-webkit-transition: width 200ms;
+	-o-transition: width 200ms;
+	-moz-transition: width 200ms;
+	-ms-transition: width 200ms;
+}
+.monaco-action-bar .action-item .progress-item .tag.active {
+	width: 1.5em;
+}
+.monaco-action-bar .action-item .progress-item .tag.progress {
+	background-color: gray;
+}
+.monaco-action-bar .action-item .progress-item .tag.done {
+	background-color: green;
+}
+.monaco-action-bar .progress-item .tag.error {
+	background-color: #C33;
+}
+.monaco-actions-widget {
+	position: relative;
+}
+.monaco-actions-widget .more {
+	position: absolute;
+	top: 0;
+	right: 1em;
+	font-weight: bold;
+	cursor: pointer;
+	display: none;
+}
+.monaco-actions-widget .more.active {
+	-ms-transform: translate(0, -3px);
+	-webkit-transform: translate(0, -3px);
+	-moz-transform: translate(0, -3px);
+	-o-transform: translate(0, -3px);
+	transform: translate(0, -3px);
+}
+.monaco-actions-widget .primary {
+	display: none;
+}
+.monaco-actions-widget.hasPrimary .primary {
+	display: inherit;
+}
+.monaco-actions-widget.hasSecondary .more {
+	display: inherit;
+}
+.monaco-actions-widget .secondary.monaco-action-bar {
+	display: none;
+}
+.monaco-actions-widget.more .secondary.monaco-action-bar {
+	display: inherit;
+}
+
+.monaco-editor .in-editor-actions {
+	z-index:100;
+}
+.monaco-editor .in-editor-actions .arrow {
+	border-style: solid;
+	border-width: 6px;
+	border-color: transparent;
+	border-bottom-color: #1282ce;
+	position: absolute;
+	left: -6px;
+	top: -6px;
+	width: 0;
+	height: 0;
+	cursor: pointer;
+}
+.monaco-editor .in-editor-actions .menu {
+	background-color: #1382CE;
+	position: absolute;
+	left: -6px;
+	top: 6px;
+}
+.monaco-editor .in-editor-actions .menu .monaco-action-bar {
+	margin: 0;
+	padding: 0.2em 0.6em;
+}
+.monaco-editor .in-editor-actions .menu .action-label {
+	color: white;
+	font-family: "Segoe WPC", "Segoe UI", "HelveticaNeue-Light", sans-serif;
+}
+.monaco-editor .in-editor-actions .menu .focused .action-label {
+	opacity: 1;
+}
+
+
+.monaco-editor .token.meta.code1		{ color: black; }
+.monaco-editor .token.meta.code30		{ color: dimGray; }
+.monaco-editor .token.meta.code31		{ color: #BE1717; }
+.monaco-editor .token.meta.code32		{ color: darkgreen; }
+.monaco-editor .token.meta.code33		{ color: #BEB817; }
+.monaco-editor .token.meta.code34		{ color: darkblue; }
+.monaco-editor .token.meta.code35		{ color: darkmagenta; }
+.monaco-editor .token.meta.code36		{ color: darkcyan; }
+.monaco-editor .token.meta.code37		{ color: #BDBDBD; }
+.monaco-editor.vs-dark .token.meta.code1		{ color: white; }
+.monaco-editor.vs-dark .token.meta.code30		{ color: #5C5C5C; }
+.monaco-editor.vs-dark .token.meta.code31		{ color: #A74747; }
+.monaco-editor.vs-dark .token.meta.code32		{ color: #348F34; }
+.monaco-editor.vs-dark .token.meta.code33		{ color: #5F4C29; }
+.monaco-editor.vs-dark .token.meta.code34		{ color: #6286BB; }
+.monaco-editor.vs-dark .token.meta.code35		{ color: #914191; }
+.monaco-editor.vs-dark .token.meta.code36		{ color: #218D8D; }
+.monaco-editor.vs-dark .token.meta.code37		{ color: #707070; }
+
+
+.monaco-editor .quick-outline-widget {
+	font-family: "Segoe WPC", "Segoe UI", "HelveticaNeue-Light", sans-serif;
+	font-size: 13px;
+	line-height: 23px;
+	z-index: 100;
+}
+.monaco-editor .quick-outline-widget .monaco-highlighted-label .highlight {
+	font-weight: bold;
+	color: #1D8ACB;
+}
+.monaco-editor .quick-outline-widget {
+	background-color: #F6F6F6;
+	box-shadow: 0 0 20px rgba(91, 91, 91, 0.5);
+}
+.monaco-editor.vs-dark .quick-outline-widget {
+	background-color: #252526;
+	box-shadow: 0 0 20px #000;
+}
+.monaco-editor.tomorrow-night .quick-outline-widget {
+	background-color: #232729;
+	box-shadow: 0 0 20px #111;
+}
+.monaco-editor .quick-outline-widget .quick-outline-input {
+	background-color: white;
+}
+.monaco-editor.vs-dark .quick-outline-widget .quick-outline-input {
+	background-color: #333337;
+}
+.monaco-editor.tomorrow-night .quick-outline-widget .quick-outline-input {
+	background-color: #333337;
+}

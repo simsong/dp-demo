@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<HEAD>
+<style>
+
+#bbox {
+ height: 200px;
+}
+
+#barrier {
+  width: 50px;
+  transform: rotate(-90deg);
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20pt;
+  position: relative;
+  top: 60px;
+  left: 10px;
+}
+
+tr {border-style: solid;}
+td {border-style: solid;}
+table {
+  font-size: 11pt;
+  font-family: sans-serif;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+input {
+  text-align: right;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+.ruralblock {
+  background-color: rgb(0,255,0);
+}
+
+.ruralcounty {
+  background-color: rgb(128,255,128);
+}
+
+.urbanblock {
+  background-color: rgb(128,128,255);
+}
+
+.urbancounty {
+  background-color: rgb(192,192,255);
+}
+
+.data {
+   font-family: monospace;
+}
+
+.column {
+  float: left;
+  padding: 5px; 
+}
+
+.noise {
+  background-color: yellow;
+}
+
+
+/*
+.left, .right {
+  width: 40%; 
+}
+*/
+
+.middle {
+//  width: 10%; 
+padding: 4px;
+height: 250px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+</style>
+<link rel="stylesheet" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"></link>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="demo.js"></script>
+</HEAD>
+<BODY>
+<div class="row"><div class="column left"><TABLE TEXT_FORMAT="{}" NUMBER_FORMAT="{:,}" INTEGER_FORMAT="{:,}">
+<CAPTION/>
+<THEAD/>
+<TBODY>
+<tr><td colspan="6">Any State pop: <span class="data" id="rstate-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rstate-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rstate-m" value="0"/></td></tr>
+<tr><td colspan="3" class="ruralcounty">Ruralland  pop: <span class="data" id="rfcounty-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rfcounty-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rfcounty-m" value="0"/></td><td colspan="3" class="urbancounty">Urbanville pop: <span class="data" id="rucounty-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rucounty-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rucounty-m" value="0"/></td></tr>
+<tr><td class="ruralblock">RBlock<br/> pop: <span class="data" id="rb1-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb1-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb1-m" value="0"/></td><td class="ruralblock">RBlock<br/> pop: <span class="data" id="rb2-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb2-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb2-m" value="0"/></td><td class="ruralblock">RBlock<br/> pop: <span class="data" id="rb3-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb3-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb3-m" value="0"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb4-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb4-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb4-m" value="0"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb5-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb5-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb5-m" value="0"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb6-pop" text="tbd"/><br/><span class="datalabel">f:</span><input type="text" min="0" max="999" size="3" id="rb6-f" value="0"/><br/><span class="datalabel">m:</span><input type="text" min="0" max="999" size="3" id="rb6-m" value="0"/></td></tr>
+</TBODY>
+<TFOOT/>
+</TABLE>
+</div>
+<div class="column middle noise"/><div class="column right"/></div>
+</BODY>
+</html>

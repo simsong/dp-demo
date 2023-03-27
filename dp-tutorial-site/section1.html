@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="census.css" rel="stylesheet">
+    <link href="tutorial.css" rel="stylesheet">
+    <link href="tutorial.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <header class="uscb-layout-row uscb-header-container">
+      <div class="uscb-flex-row-20 uscb-flex-row-md-100
+                  uscb-layout-align-center-center uscb-layout-align-md-start-center">
+        <div class="uscb-menu-icon-container uscb-hide-gt-md
+                    uscb-flex-row-md-20"></div>
+        <div class="uscb-flex-row-md-80">
+          <a href="https://www.census.gov">
+            <img class="uscb-nav-image" src="images/census.svg">
+          </a>
+        </div>
+      </div>
+      <div class="uscb-flex-row-80 uscb-layout-align-start-center uscb-hide-md">
+        <h1 class="uscb-h2 uscb-color-white"><a href="index.html">Disclosure Avoidance</a></h1>
+      </div>
+    </header>
+
+    <div class="uscv-layout-row uscb-min-height-100vh uscb-layout-align-center-center">
+      <div class="uscb-flex-row-80 uscb-flex-row-md-100 uscb-padding-3em">
+
+        <div class="   " style="box-shadow: black 0px 8px 6px -6px; border: 1px solid rgb(238, 238, 238); padding: 1em">
+          <ul role="menu" class="uscb-tabs uscb-layout-row uscb-layout-align-space-between">
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="intro.html" role="menuitem" class="uscb-tabs-link">Noise in the Census</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center selected">
+              <a href="section1.html" role="menuitem" class="uscb-tabs-link">Noise in a Block</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section2.html" role="menuitem" class="uscb-tabs-link">Noise and Accuracy</a>
+            </li>
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section3.html" role="menuitem" class="uscb-tabs-link">Preventing Database Reconstruction</a>
+            </li>
+            <!--
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="section4.html" role="menuitem" class="uscb-tabs-link">Protecting Group Quarters</a>
+            </li>
+            -->
+            <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center">
+              <a href="end.html" role="menuitem" class="uscb-tabs-link">Data Privacy in 2020</a>
+            </li>
+
+          <li role="none" class="uscb-tab uscb-layout-row uscb-layout-align-center-center selected">
+            <a href="simulator.html" role="menuitem" class="uscb-tabs-link">Privacy Simulator</a>
+          </li>
+
+          </ul>
+        </div>
+
+        <section>
+          <div style="margin-top: 1em; margin-bottom:1em;">
+            <div class="uscb-layout-row uscb-layout-align-space-between" style="background-color: rgb(17,46,81); color: rgb(255,255,255);
+                                                                                padding: 1em;">
+              <p class="uscb-title-1 uscb-margin-TB-02">Noise in a Block</p>
+            </div>
+            <div class="   " style="box-shadow: black 0px 8px 6px -6px; border:
+                                    1px solid rgb(238, 238, 238); padding: 1em">
+              <p>This is a Census Block:</p>
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/house.png" alt="House" width="450px">
+              </div>
+              <p> We publish census data grouped by these areas, called blocks. Blocks can be empty, have a single house, or can have hundreds of residents, and are typically divided by geographic features like roads or creeks.
+              </p>
+
+              <p> This block is home to a family of four, and this is what their data look like:</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class='tutorial-toprow'><th class='tutorial-name confidential'>Name</th><th class='confidential'>Sex</th><th class='confidential'>Age</th></tr>
+                  <tr><td class='tutorial-name confidential'>Mother</td><td class='confidential'>F</td><td class='confidential'>43</td></tr>
+                  <tr><td class='tutorial-name confidential'>Father</td><td class='confidential'>M</td><td class='confidential'>42</td></tr>
+                  <tr><td class='tutorial-name confidential'>Daughter</td><td class='confidential'>F</td><td class='confidential'>15</td></tr>
+                  <tr><td class='tutorial-name confidential'>Son</td><td class='confidential'>M</td><td class='confidential'>12</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/chart1.png" alt="House" width="350px">
+              </div>
+              -->
+
+              <p> The first thing we do is remove the names and other identifying information from the data:</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class='tutorial-toprow'><th class='tutorial-name confidential'>Name</th><th class='confidential'>Sex</th><th class='confidential'>Age</th></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>F</td><td class='confidential'>43</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>M</td><td class='confidential'>42</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>F</td><td class='confidential'>15</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>M</td><td class='confidential'>12</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/chart2.png" alt="House" width="350px">
+              </div>
+              -->
+
+              <p>This may seem like enough to protect this family’s
+                data, but what if someone knows this family’s address?
+                What if someone knows the ages of the family's parents and
+                is trying to learn the ages of the children? Just from the
+                information above, one could easily re-identify the
+                family's data, in violation of the Census Bureau's pledge
+                of confidentiality.</p>
+              <p>To truly protect the confidentiality of family's data,
+                we must do more. In order to provide useful data for
+                statistical purposes while providing confidentiality to
+                those who provide their data, we employ mathematical
+                process called <strong>differential privacy</strong> that
+                results in small, random changes to the data that we
+                publish our reports. </p>
+
+              <div class="uscb-layout-row uscb-padding-TB-15 uscb-padding-LR-30
+                          uscb-dark-grey-content-container uscb-layout-align-space-between
+                          uscb-wrap">
+                <p>This is called adding <strong>noise</strong> to the data, or <strong>noise injection</strong>.</p>
+              </div>
+              <p>For example, after the privacy mechanism runs, the data associated with this block might look like this:</p>
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr><th class='tutorial-name confidential'></th><th colspan='2' class='confidential'>Confidential Data</th><th colspan='2'>Published Data</th></tr>
+                  <tr class='tutorial-toprow'><th class='tutorial-name confidential'>Name</th><th class='confidential'>Sex</th><th class='confidential'>Age</th><th>Sex</th><th>Age</th></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>F</td><td class='confidential'>43</td><td>M</td><td>45</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>M</td><td class='confidential'>42</td><td>F</td><td>41</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>F</td><td class='confidential'>15</td><td>M</td><td>16</td></tr>
+                  <tr><td class='tutorial-name blackened confidential'></td><td class='confidential'>M</td><td class='confidential'>12</td><td>M</td><td>11</td></tr>
+                  <tr><td class='tutorial-name confidential'></td><td class='confidential'></td><td class='confidential'></td><td>F</td><td>27</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/chart6.png" alt="House" width="550px">
+              </div>
+              -->
+              <p>Let us compare the aggregate data we might publish for the original and noisy data.</p>
+
+
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <table class="tutorial-data">
+                  <tr class=''><th class='tutorial-name'></th><th class='confidential'>Confidential</th><th>Published</th></tr>
+                  <tr class='tutorial-toprow'><th class='tutorial-name'>Statistic</th><th class='confidential'>Value</th><th>Value</th></tr>
+                  <tr><td class='tutorial-name'>Female Count</td><td class='confidential'>2</td><td>2</td></tr>
+                  <tr><td class='tutorial-name'>Male Count</td><td class='confidential'>2</td><td>3</td></tr>
+                  <tr><td class='tutorial-name'>Average Age</td><td class='confidential'>28</td><td>27</td></tr>
+                </table>
+              </div>
+
+              <!--
+              <div class="uscb-layout-row uscb-layout-align-center-center uscb-padding-TB-30">
+                <img src="images/chart5.png" alt="House" width="550px">
+              </div>
+              -->
+
+
+              <div class="uscb-layout-row uscb-padding-TB-15 uscb-padding-LR-30
+                          uscb-dark-grey-content-container uscb-layout-align-space-between
+                          uscb-wrap">
+                <p>Noise injection data creates <strong>uncertainty</strong> about the exact confidential data.</p>
+              </div>
+              <p>Say a person was looking at the data for this census
+                block, and knew that only one family lived there. Knowing
+                that noise has changed some of the data, that person would
+                not know from our data whether the family has 0, 1, 2, 3,
+                or even 4 female members. This uncertainty about which
+                numbers are exact and which have been adjusted protects
+                families from having their data identified. </p>
+
+              <p>Comparing the confidential and published statistics,
+                the average age and Female Count have remained the same,
+                but the Male Count has changed. The privacy mechanism used
+                in the 2020 Census works to preserve the accuracy of
+                specific statistics while protecting the confidentiality
+                of the underlying data, as demonstrated here.</p>
+
+              <p>Although the population of this block changes as a
+                result of the privacy mechanism, the privacy mechanism
+                assures that these changes are not significant, especially
+                when larger geographical areas are considered.
+
+                <!-- It is important to note that though some statistics
+                are impacted by noise with noise, the total number of people
+                counted will not change. Adding noise does not create
+                imaginary people, it simply adjusts existing data values
+                to protect the data of individuals.-->
+
+              </p>
+              <br/>
+              <a class="uscb-primary-link" style="float:left" href="intro.html">Previous Section</a>
+              <a class="uscb-primary-link" style="float:right" href="section2.html">Next Section</a>
+              <hr class="uscb-light-teal-hr" />
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

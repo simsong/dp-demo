@@ -1,0 +1,110 @@
+@charset "UTF-8";
+
+#bbox {
+ height: 200px;
+}
+
+#barrier {
+  width: 50px;
+  transform: rotate(-90deg);
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20pt;
+  position: relative;
+  top: 60px;
+  left: 10px;
+}
+
+#privatize {
+    font-size: 14pt;
+}
+
+tr {border-style: solid;}
+td.block {border-style: solid;}
+table {
+  font-size: 11pt;
+  font-family: sans-serif;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+input {
+  text-align: right;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+input.data {
+	width: 30pt;
+}
+
+.block {
+    width: 60pt;
+}
+
+.ruralblock {
+  background-color: rgb(0,255,0);
+}
+
+.ruralcounty {
+  background-color: rgb(128,255,128);
+}
+
+.urbanblock {
+  background-color: rgb(128,128,255);
+}
+
+.urbancounty {
+  background-color: rgb(192,192,255);
+}
+
+
+.datalabel {
+   font-family: monospace;
+}
+
+.dataline2, .dataline3 {
+    height:26px;
+    margin:auto;
+}
+
+.instructions {
+    max-width: 6in;
+}
+
+.column {
+  float: left;
+  padding: 5px; 
+}
+
+.noise {
+  background-color: yellow;
+}
+
+.sbutton, .pushedsbutton {
+    width: 40px;
+    background-color: lightblue;
+}
+
+.sbutton:hover {
+    background-color: blue;
+}
+
+.scenarios {
+    text-align: left;
+}
+
+.middle {
+    //  width: 10%; 
+    padding: 4px;
+    height: 300px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+

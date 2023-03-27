@@ -1,0 +1,71 @@
+<!doctype html>
+<!-- https://stackoverflow.com/questions/32916256/zurb-foundation-5-5-2-range-slider-clicking-on-bar-to-advance-handle-to-position -->
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../assets/css/docs.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css" rel="stylesheet" />
+    <script src="../assets/js/modernizr.js"></script>
+  </head>
+  <body>
+
+    <div class="row">
+      <div class="small-10 medium-11 columns">
+        <!-- SLIDER START   -->
+        <div class="range-slider" data-slider data-options="display_selector:
+							    #sliderOutput3;trigger_input_change: true">
+          <span class="range-slider-handle" role="slider" tabindex="0"></span>
+          <span class="range-slider-active-segment"></span>
+        </div>
+        <!-- SLIDER END   -->
+      </div>
+      <div class="small-2 medium-1 columns">
+        <span id="sliderOutput3"></span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="small-2 medium-11 columns" >
+	<p style='font-size:100px'>More text <span id='output1'>No</span></p>
+      </div>
+      <div class="small-10 medium-1 columns">
+        <p>Even more text</p>
+      </div>
+    </div>
+
+    <!-- Foundation updated -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="../assets/js/templates.js"></script>
+    <script src="../assets/js/all.js"></script>
+    <script> 
+
+if (!String.format) {
+  String.format = function(format) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return format.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number] 
+        : match
+      ;
+    });
+  };
+}
+$(document).foundation().foundation('joyride', 'start');
+
+$(document).foundation({
+  slider: {
+      on_change: function(){
+      console.log("changed");
+      //$("body").append("changed<br/>");
+	  var slider1 = parseInt($("#sliderOutput3").text(),10);
+	  $("#output1").text(String.format('{0} + {0} = {1}',slider1,slider1+slider1));
+	  //$("#output1").text(slider1*2);
+     }
+   }
+});
+
+</script>
+  </body>
+</html>

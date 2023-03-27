@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+#illustration {
+    height: 370px; 
+    background-color: lightblue;
+}
+
+#houses {
+    height: 250px; 
+    background-color: lightblue;
+}
+
+#grass {
+    height: 100px; 
+    background-color: lightgreen;
+}
+
+.emoji {
+    font-size: 28pt;
+}
+
+.roof {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 50px solid black;
+}
+
+.house {
+  height: 320px;
+  width: 320px;
+  background-color: #ff7043;
+  text-align: center;
+  position: relative;
+}
+
+.metrics {
+  min-height: 30px;
+  padding: 8px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.labels {
+  width: 120px;
+}
+
+.window {
+  min-height: 50px;
+  max-width: 60px;
+  background-color: lightyellow;
+  border: 5px solid black;
+  position: relative;
+}
+
+.windowHolder {
+  height: 250px;
+  width: 65px;
+  background-color: #ff7043;
+  float: left;
+  padding-left: 14px;
+  padding-top: 5px;
+}
+
+.windowSpacer {
+  height: 5px;
+  width: 40px;
+  background-color: #ff7043;
+}
+
+.driveway {
+  width: 100px;
+  height: 0;
+  border-bottom: 130px solid black;
+  border-left: 60px solid transparent;
+  border-right: 60px solid transparent;
+}
+
+.ui-slider .ui-slider-handle {
+   background: blue;
+}
+
+.updated-handle {
+   background: blue;
+}

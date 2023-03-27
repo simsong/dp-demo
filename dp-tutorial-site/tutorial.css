@@ -1,0 +1,65 @@
+h3 {
+  line-height: 1.5;
+}
+
+p {
+    line-height: 1.25;
+}
+
+.tutorial-ul {
+  list-style-position: inside;
+}
+
+.tutorial-ul li {
+  font-size: 1.25rem;
+  letter-spacing: 0;
+  line-height: 25px;
+  font-family: "Roboto", sans-serif;
+  list-style-type: disc !important;
+  color: #112e51;
+}
+
+.selectedX {
+  color: white;
+  background-color: #112e51;
+}
+
+table.tutorial-data {
+   font-size: 1.25rem;
+   text-align: center;
+   border-left: 1px solid black;
+   border-right: 1px solid black;
+}
+
+table.tutorial-data td, 
+table.tutorial-data th { 
+   min-width: 150px;
+   vertical-align: middle;
+}
+
+table.tutorial-data tr { 
+   height: 40px;
+}
+
+.tutorial-name {
+   border-right: 1px solid black;
+}
+
+.tutorial-toprow {
+   border-bottom: 1px solid black;
+}
+
+td.blackened:before {
+  content: " ██████ ";
+}
+
+.confidential {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.published {
+  background-color: white;
+  font-weight: bold;
+}
+

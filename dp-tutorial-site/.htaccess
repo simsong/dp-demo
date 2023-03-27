@@ -1,0 +1,5 @@
+AuthType Basic
+AuthName "Under Development"
+AuthBasicProvider file
+AuthUserFile "/home/dp_demo/demo.dpwiki.org.htpasswd"
+Require valid-user

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Simple Race Demo</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css"/>
+    <style>
+      #e-handle {
+      height: 1.6em;
+      top: 50%;
+      margin-top: -0.8em;
+      text-align: center;
+      line-height: 1.6em;
+      }
+button {
+    width: 10em;
+    height: 2em;
+    font-size: 24px;
+}
+#pop2 {
+    color: black;
+}
+    .popslider {
+	width: 200px;
+	margin-left: 7px;
+	margin-right: 7px;
+    }
+    .popcount {
+	text-align: center;
+    }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="sprintf.min.js"></script>
+    <script>
+    $( function() {
+	
+        var names=['g100','g200','g300','g400','g500','g600','g700','g800'];
+
+        function sgn(x) {
+            return x < 0 ? -1 : 1;
+        }
+        
+        function laplace(mu, b) {
+            var U = Math.random() - 0.5;
+            return mu - (b * sgn(U) * Math.log(1 - 2* Math.abs(U)));
+        }
+        
+        function privateNoise(deltaF,epsilon) {
+            return laplace(0.0, deltaF/epsilon);
+        }
+        
+        function privatize(F,deltaF,epsilon) {
+            return F + privateNoise(deltaF,epsilon);
+        }
+
+        function recalc() {
+            // Read the values into an array and calculate the total pop
+            var totalCounts = 0;
+            var noises = [];	// how much noise was added
+            var counts = [];	// original counts
+            var pcounts = [];	// privitized counts
+            
+            for (var i=0;i<names.length;i++){
+                var val = parseInt( $( '#' + names[i] + '-count').text() );
+                counts[i] = val;
+                totalCounts += val;
+            }
+            
+            $("#pop, #pop2").text( totalCounts );
+            $("#pope").text( 0 ); // error on population is zero
+
+            // Get value of epsilon
+            var epsilon = parseFloat( $( '#e' ).text() );
+            if (epsilon<=0.0){
+                epsilon=0.0001;
+            }
+
+            // For each, generate noise for each, and store the noise result in the GUI,
+            // compute the initial private value, and store the results
+	    
+            for (var i=0; i < names.length; i++) {
+               // compute the privitized counts
+               noises[i]  = privateNoise( 1, epsilon );
+               pcounts[i] = Math.max( Math.round( counts[i] + noises[i] ), 0);
+               // show the user how much noise was added and the initial privitized value
+               $( '#' + names[i] + '-noise' ).text( noises[i] );
+               $( '#' + names[i] + '-pcount').text( pcounts[i] );
+            }
+
+            // Optimizer. Determine how much error there is, and distribute it
+            // as much as possible. 
+            
+				
+            add = function(a,b) {return a+b;};
+
+            var cycles = 1000;	// repeat a max of 1000 cycles
+            while (cycles-- > 0) {
+               var error = totalCounts - pcounts.reduce(add);
+               if (error==0) break;
+               var d = Math.floor( Math.random() * pcounts.length );
+               pcounts[d]  = Math.max( pcounts[d]+ sgn(error), 0);
+            }
+				
+            // Write the results and the error
+            for (var i = 0; i < names.length; i++) {
+               $( '#' +names[i] + '-rcount').text( pcounts[i] );
+               $( '#' +names[i] + '-error').text( counts[i] - pcounts[i] );
+            }
+         }
+        
+         // whenever a slider is moved, copy the data to the text fields
+         // If we have more than 10 sliders or so, we should just move the one that changed.
+         function copyHandlesToTextfields() {
+            for (var i = 0; i < names.length; i++) {
+               var val = parseInt( $( '#' + names[i] + '-slider').slider('value') );
+               $('#' + names[i] + '-count').text( val );
+            }
+
+            // Copy over epsilon
+            var epsilon = parseFloat($("#e-slider").slider('value')) / 1000.0;
+            $("#e").text( sprintf('%6.3f',epsilon ));
+            
+            recalc();
+         }
+
+        // Create the counts sliders
+	var slider_names = [];
+	for (var i=0;i<names.length;i++){
+	    slider_names[i] = '#' + names[i] + '-slider';
+	}
+	
+	$( slider_names.join() ).slider({
+	    min: 0,
+ 	    max: 100,
+	    slide:  copyHandlesToTextfields,
+	    change: copyHandlesToTextfields,
+	    value:  10
+        });
+        
+	// Epsilon slider 
+        $( "#e-slider" ).slider({
+            min: 0,
+            max: 2000,
+            slide:  copyHandlesToTextfields,
+            change: copyHandlesToTextfields,
+            value:  1000
+        });
+        
+        // Create the roll again button
+        $( "#rollAgainButton" ).click( function( event) {
+            recalc();
+            event.preventDefault();
+        });
+
+        $( "#clearButton" ).click( function( event) {
+	    for (var i=0;i<names.length;i++){
+		$( slider_names[i] ).slider( 'value', 0 );
+	    }
+            recalc();
+            event.preventDefault();
+        });
+
+	// And finally, compute an initial role
+        copyHandlesToTextfields();
+
+    } );
+    </script>
+  </head>
+  <body>
+    <h2>Differentially Private Group Quarters Simulator</h2>
+    <p>Algorithm: the counts of White, Black and Asian populations are set by the sliders, then privatized with the differential privacy Laplace mechanism. The privatized values are rounded to the nearest non-negative integer. Finally, the error between the actual count and the privatized count is randomly distributed among the three privatized variables.</p>
+    <table border=1>
+    <tr>
+       <th> Category </th>
+       <th colspan=2> Real Counts </th>
+       <th width=180> Added Noise </th>
+       <th width=180> Raw<br>Privatized<br>Counts </th>
+       <th> Reported<br>Counts </th>
+       <th> Error </th>
+    </tr>
+    <tr>
+      <th>G100: Adult Detention Centers</th>
+      <td class='popcount'><span id='g100-count'  /> </td>
+      <td><div  id='g100-slider' class='popslider' > </div> </td> 
+      <td><span id='g100-noise'  /></td> 
+      <td class='popcount'><span id='g100-pcount' /></td> 
+      <td class='popcount'><span id='g100-rcount' /></td> 
+      <td class='popcount'><span id='g100-error'  /></td> 
+    </tr>
+
+    <tr>
+      <th>G200: Juvenile Centers</th>
+      <td class='popcount'><span id='g200-count' /> </td>
+      <td><div  id='g200-slider' class='popslider' > </div> </td> 
+      <td><span id='g200-noise'/></td> 
+      <td class='popcount'><span id='g200-pcount' /></td> 
+      <td class='popcount'><span id='g200-rcount' /></td> 
+      <td class='popcount'><span id='g200-error'/></td> 
+    </tr>
+
+    <tr>
+      <th>G300: Nursing Facilities </th>
+      <td class='popcount'><span id='g300-count' /> </td>
+      <td><div  id='g300-slider' class='popslider' > </div> </td> 
+      <td><span id='g300-noise'/></td> 
+      <td class='popcount'><span id='g300-pcount' /></td> 
+      <td class='popcount'><span id='g300-rcount' /></td> 
+      <td class='popcount'><span id='g300-error'/></td> 
+    </tr>
+
+    <tr>
+      <th>G400: Treatment Facilities </th>
+      <td class='popcount'><span id='g400-count' /> </td>
+      <td><div  id='g400-slider' class='popslider' > </div> </td> 
+      <td><span id='g400-noise'/></td> 
+      <td class='popcount'><span id='g400-pcount' /></td> 
+      <td class='popcount'><span id='g400-rcount' /></td> 
+      <td class='popcount'><span id='g400-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>G500: Student Housing</th>
+      <td class='popcount'><span id='g500-count' /> </td>
+      <td><div  id='g500-slider' class='popslider' > </div> </td> 
+      <td><span id='g500-noise'/></td> 
+      <td class='popcount'><span id='g500-pcount' /></td> 
+      <td class='popcount'><span id='g500-rcount' /></td> 
+      <td class='popcount'><span id='g500-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>G600: Military Quarters </th>
+      <td class='popcount'><span id='g600-count' /> </td>
+      <td><div  id='g600-slider' class='popslider' > </div> </td> 
+      <td><span id='g600-noise'/></td> 
+      <td class='popcount'><span id='g600-pcount' /></td> 
+      <td class='popcount'><span id='g600-rcount' /></td> 
+      <td class='popcount'><span id='g600-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>G700: Emergency Shelters</th>
+      <td class='popcount'><span id='g700-count' /> </td>
+      <td><div  id='g700-slider' class='popslider' > </div> </td> 
+      <td><span id='g700-noise'/></td> 
+      <td class='popcount'><span id='g700-pcount' /></td> 
+      <td class='popcount'><span id='g700-rcount' /></td> 
+      <td class='popcount'><span id='g700-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>G800: Group Homes for Adults </th>
+      <td class='popcount'><span id='g800-count' /> </td class='popcount'>
+      <td><div  id='g800-slider' class='popslider' > </div> </td> 
+      <td><span id='g800-noise'/></td> 
+      <td class='popcount'><span id='g800-pcount' /></td> 
+      <td class='popcount'><span id='g800-rcount' /></td> 
+      <td class='popcount'><span id='g800-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>G900: Misc.</th>
+      <td class='popcount'><span id='g900-count' /> </td class='popcount'>
+      <td><div  id='g900-slider' class='popslider' > </div> </td> 
+      <td><span id='g900-noise'/></td> 
+      <td class='popcount'><span id='g900-pcount' /></td> 
+      <td class='popcount'><span id='g900-rcount' /></td> 
+      <td class='popcount'><span id='g900-error'/></td> 
+    </tr>
+    
+    <tr>
+      <th>Total Group Quarters Population:</th>
+      <td class='popcount'><span id='pop' /> </td>
+      <td colspan=3></td> 
+      <td class='popcount'> <span id='pop2' /> </td>
+      <td class='popcount'> <span id='pope' /> </td>
+    </tr>
+    
+    <tr>
+      <th>Epsilon:</th>
+      <td> <span id='e'/> </td>
+      <td colspan=5> <div id="e-slider">  </div> </td>
+    </tr>
+    </table>
+    
+    <button id='rollAgainButton'>Roll Again</button>
+    <button id='clearButton'>Clear</button>
+    <p>Note 1: A new differentially private population is created every time any of the sliders is moved.</p>
+    <p>Note 2: The Laplace() noise operator has not been validated in this web-based demo.</p>
+  </body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<HEAD>
+<style>
+
+#bbox {
+ height: 200px;
+}
+
+#barrier {
+  width: 50px;
+  transform: rotate(-90deg);
+  font-weight: bold;
+  font-family: sans-serif;
+  font-size: 20pt;
+  position: relative;
+  top: 60px;
+  left: 10px;
+}
+
+tr {border-style: solid;}
+td {border-style: solid;}
+table {
+  font-size: 11pt;
+  font-family: sans-serif;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+input {
+  text-align: right;
+  font-weight: bold;
+  font-size: 12pt;
+}
+
+.farmblock {
+  background-color: rgb(0,255,0);
+}
+
+.farmcounty {
+  background-color: rgb(128,255,128);
+}
+
+.urbanblock {
+  background-color: rgb(128,128,255);
+}
+
+.urbancounty {
+  background-color: rgb(192,192,255);
+}
+
+.data {
+   font-family: monospace;
+}
+
+.column {
+  float: left;
+  padding: 5px; 
+}
+
+.noise {
+  background-color: yellow;
+}
+
+
+/*
+.left, .right {
+  width: 40%; 
+}
+*/
+
+.middle {
+//  width: 10%; 
+padding: 4px;
+height: 250px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+
+</style>
+<link rel="stylesheet" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"></link>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script src="demo.js"></script>
+</HEAD>
+<BODY>
+<div class="row"><div class="column left"><TABLE TEXT_FORMAT="{}" NUMBER_FORMAT="{:,}" INTEGER_FORMAT="{:,}">
+<CAPTION/>
+<THEAD/>
+<TBODY>
+<tr><td colspan="6">Any State pop: <span class="data" id="rstate">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="rstatef">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="rstatem">tbd</span>
+</td></tr>
+<tr><td colspan="3" class="farmcounty">Farmland  pop: <span class="data" id="rfcounty">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="rfcountyf">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="rfcountym">tbd</span>
+</td><td colspan="3" class="urbancounty">Urbanville pop: <span class="data" id="rucounty">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="rucountyf">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="rucountym">tbd</span>
+</td></tr>
+<tr><td class="farmblock">FBlock<br/> pop: <span class="data" id="rb1">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb1f" value="2"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb1m" value="1"/></td><td class="farmblock">FBlock<br/> pop: <span class="data" id="rb2">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb2f" value="15"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb2m" value="10"/></td><td class="farmblock">FBlock<br/> pop: <span class="data" id="rb3">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb3f" value="10"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb3m" value="25"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb4">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb4f" value="330"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb4m" value="350"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb5">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb5f" value="800"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb5m" value="750"/></td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="rb6">tbd</span>
+<br/><span class="data">f:</span><input type="text" min="0" max="999" size="3" id="rb6f" value="975"/><br/><span class="data">m:</span><input type="text" min="0" max="999" size="3" id="rb6m" value="925"/></td></tr>
+</TBODY>
+<TFOOT/>
+</TABLE>
+</div>
+<div class="column middle noise"><p><div id="bbox"><div id="barrier">Noise Barrier</div></div><button>privitize!</button><br/>&epsilon; <select name="epsilon" id="epsilon"><option>0.5</option><option selected="selected">1.0</option><option>2.0</option></select></p>
+</div>
+<div class="column right"><TABLE TEXT_FORMAT="{}" NUMBER_FORMAT="{:,}" INTEGER_FORMAT="{:,}">
+<CAPTION/>
+<THEAD/>
+<TBODY>
+<tr><td colspan="6">Any State pop: <span class="data" id="pstate">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pstatef">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pstatem">tbd</span>
+</td></tr>
+<tr><td colspan="3" class="farmcounty">Farmland  pop: <span class="data" id="pfcounty">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pfcountyf">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pfcountym">tbd</span>
+</td><td colspan="3" class="urbancounty">Urbanville pop: <span class="data" id="pucounty">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pucountyf">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pucountym">tbd</span>
+</td></tr>
+<tr><td class="farmblock">FBlock<br/> pop: <span class="data" id="pb1">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb1f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb1m">tbd</span>
+</td><td class="farmblock">FBlock<br/> pop: <span class="data" id="pb2">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb2f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb2m">tbd</span>
+</td><td class="farmblock">FBlock<br/> pop: <span class="data" id="pb3">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb3f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb3m">tbd</span>
+</td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="pb4">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb4f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb4m">tbd</span>
+</td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="pb5">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb5f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb5m">tbd</span>
+</td><td class="urbanblock">UBlock<br/> pop: <span class="data" id="pb6">tbd</span>
+<br/><span class="data">f:</span><span class="data" id="pb6f">tbd</span>
+<br/><span class="data">m:</span><span class="data" id="pb6m">tbd</span>
+</td></tr>
+</TBODY>
+<TFOOT/>
+</TABLE>
+</div>
+</div>
+</BODY>
+</html>

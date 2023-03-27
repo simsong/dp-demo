@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Widget Demos</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Jquery  and JQueryUI. Notice we use Google hosting.
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+
+  <!-- Differential Privacy!
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="js/privatize.js"></script>
+
+</head>
+
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+
+    <div class="row">
+      <div class="one-half column" style="margin-top: 10%">
+        <h2>Widget Demos</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="one-half column" style="margin-top: 10%">
+        <h3>Input:</h3>
+        <form>
+          <table id='input'>
+            <tr>
+              <th></th>
+              <th>Females</th>
+              <th>Males </th>
+            </tr>
+            <tr class='mimi'>
+              <th>Under 18</th>
+              <td> <input id='ifu' name='ifu' value='10' </td>
+                <td> <input id='imu' name='imu' value='30' </td></tr>
+            <tr class='mimi'>
+              <th>Over 18 </th>
+              <td> <input id='ifo' name='ifo' value='20' </td>
+                <td> <input id='imo' name='imo' value='40' </td></tr>
+          </table>
+        </form>
+      </div>
+      <div class="one-half column" style="margin-top: 10%">
+        <h3>Output:</h3>
+        <form>
+          <table id='output'>
+            <tr>
+              <th></th>
+              <th>Females</th>
+              <th>Males </th>
+            </tr>
+            <tr class='mimi'>
+              <th>Under 18</th>
+              <td id='ofu'></td>
+              <td id='omu'></td>
+            </tr>
+            <tr class='mimi'>
+              <th>Over 18 </th>
+              <td id='ofo'></td>
+              <td id='omo'></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+    </div>
+    <div class='row'>
+      <div id="epsilon-slider" />
+      </br>
+      Epsilon: <span id='epsilon-value' />
+    </div>
+
+    <div class='row'>
+      <button class='button-primary' id='roll'>Roll Again</button>
+    </div>
+
+    <!-- https://www.w3schools.com/howto/howto_css_animate_buttons.asp -->
+    <style>
+      tr.mimi {
+        height: 70px;
+      }
+
+      #input input {
+        width: 50px;
+      }
+
+      #epsilon-slider {
+        margin-bottom: 5px
+      }
+
+      .button-primary:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+      }
+    </style>
+
+    <div class="row">
+      <h2>Event Tests</h2>
+      <p>This timer demonstrates drift. The clock is supposed to fire every 1000 milliseconds and it is started when the page loads, so any fraction of second represents clock drift. Notice how it steadily increases... Elapsed seconds: <span id='timer'></span></p>
+      <p>Time of day: <span id='clock'></span></p>
+    </div>
+  </div>
+  <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script>
+    // All wrapped inside the document.ready() function so that it runs when the document is completely loaded
+    $(document).ready(function() {
+
+      // We scale epsilon
+      var epsilon_slider_value = 0;
+
+      function epsilon_slider_moved(event, ui) {
+        var v = isNaN(ui.value) ? 0 : ui.value;
+        epsilon_slider_value = Math.max(v, 1) / 1000;
+        $('#epsilon-value').text(epsilon_slider_value);
+        $('#roll').click();
+      }
+
+      // Create the slider!
+      $('#epsilon-slider').slider({
+        min: 0,
+        max: 3000,
+        create: epsilon_slider_moved,
+        slide: epsilon_slider_moved,
+        change: epsilon_slider_moved
+      });
+
+
+      var start = new Date;
+      setInterval(function() {
+        $('#timer').text((new Date - start) / 1000);
+        $('#clock').text((new Date()).toString());
+      }, 1000);
+
+      var update = function(model) {
+        var i;
+        for (i = 0; i < model.counts.length; i++) {
+          $('#o' + model.labels[i]).text(model.noisy_counts[i]);
+        }
+      }
+
+      // Wire-up the roll-again button
+      $('#roll').click(function() {
+        // Create the differential privacy object
+
+        model = {
+          epsilon: epsilon_slider_value,
+          callback: update,
+          counts: [],
+          labels: ['fu', 'fo', 'mu', 'mo'],
+          invariant_counts: 1
+        };
+        // Now get the counts from the HTML form
+        var i;
+        for (i = 0; i < model.labels.length; i++) {
+          model.counts[i] = parseInt($('#i' + model.labels[i]).val());
+        }
+        privitize_histogram(model);
+      });
+
+    });
+  </script>
+</body>
+
+</html>

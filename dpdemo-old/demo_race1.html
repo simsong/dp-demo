@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simple Race Demo</title>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+  <style>
+  #w-handle,#b-handle,#a-handle {
+    height: 1.6em;
+    top: 50%;
+    margin-top: -0.8em;
+    text-align: center;
+    line-height: 1.6em;
+  }
+  #e-handle {
+    height: 1.6em;
+    top: 50%;
+    margin-top: -0.8em;
+    text-align: center;
+    line-height: 1.6em;
+  }
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="sprintf.min.js"></script>
+  <script>
+	$( function() {
+
+	    function sgn(x) {
+		return x < 0 ? -1 : 1;
+	    }
+
+	    // From wikipedia:
+	    // Lap(X) = mu - b sgn(U) ln (1-2|U|) where U is a random variable between -0.5 and 0.5
+	    function laplace(mu, b) {
+		var U = Math.random() - 0.5;
+		return mu - (b * sgn(U) * Math.log(1 - 2* Math.abs(U)));
+   	    }
+
+	    function privatize(F,deltaF,epsilon) {
+		return F + laplace(0.0, deltaF/epsilon);
+	    }
+
+	    function refreshHandle() {
+		var wCount = parseInt($("#w-slider").slider('value'));
+		var bCount = parseInt($("#b-slider").slider('value'));
+		var aCount = $("#a-slider").slider('value');
+
+		$("#w-count").text( wCount );
+		$("#b-count").text( bCount );
+		$("#a-count").text( aCount );
+
+		var total = wCount + bCount + aCount;
+		$("#pop, #pop2").text(total);
+
+		var epsilon = parseFloat($("#e-slider").slider('value')) / 1000.0;
+		$("#e").text( sprintf('%6.3f',epsilon ));
+		if (epsilon<=0.0){
+		    epsilon=0.0001;
+		}
+
+		// Privatize the counts
+
+		var wpriv = privatize(wCount, 1, epsilon);
+		var bpriv = privatize(bCount, 1, epsilon);
+		var apriv = privatize(aCount, 1, epsilon);
+
+		console.log(sprintf("wpriv=%f bpriv=%f apriv=%f",wpriv,bpriv,apriv));
+
+		$("#w-priv").text( wpriv );
+		$("#b-priv").text( bpriv );
+		$("#a-priv").text( apriv );
+
+		var wrep = Math.max(Math.round(wpriv),0);
+		var brep = Math.max(Math.round(bpriv),0);
+		var arep = Math.max(Math.round(apriv),0);
+
+		// See how far our error is
+		
+		// Distribute the error randomly among the values
+		do {
+		    var error =  total - (wrep + brep + arep);
+		    if (error != 0) {
+			var delta = sgn(error);
+			r = Math.random(); // get a random number
+
+			// If the number is too slow, pick a value to randomly increase 
+			if (r < 0.333) {
+			    wrep += sgn(error);
+			    wrep = Math.max(wrep, 0);
+			} else if (r < 0.666) {
+			    brep += sgn(error);
+			    brep = Math.max(brep, 0);
+			} else {
+			    arep += sgn(error);
+			    arep = Math.max(arep, 0);
+			}
+		    }
+		} while (error != 0);
+		$("#w-reported").text(wrep);
+		$("#b-reported").text(brep);
+		$("#a-reported").text(arep);
+
+	    }
+	    
+	    // Create the sliders 
+
+	    $( "#w-slider, #b-slider, #a-slider" ).slider({
+		slide:  refreshHandle,
+		change: refreshHandle,
+		value:  10
+	    });
+	    
+	    $( "#e-slider" ).slider({
+		min: 0,
+		max: 2000,
+		slide:  refreshHandle,
+		change: refreshHandle,
+		value:  1000
+	    });
+	    
+	    // Create the roll again button
+	    $( "button" ).click( function( event) {
+		refreshHandle();
+		event.preventDefault();
+	    });
+	    refreshHandle();
+
+	} );
+  </script>
+</head>
+<body>
+ 
+<h2>Differentially Private Race Count Simulator</h2>
+    <p>Algorithm: the counts of White, Black and Asian populations are set by the sliders, then privatized with the differential privacy Laplace mechanism. The privatized values are rounded to the nearest non-negative integer. Finally, the error between the actual count and the privatized count is randomly distributed among the three privatized variables.</p>
+
+<table border=1>
+    <tr><th> Category </th> <th colspan=2> Real Values </th>  <th width=180> Raw Private Values </th> <th> Reported Values </th> </tr>
+    <tr><th width=150 height=40>White: </th>      <td> <span id='w-count'/> </td> <td width=300> <div id="w-slider">  </div> </td> <td> <span id='w-priv'></span> </td> <td> <span id='w-reported'></span> </td> </tr>
+    <tr><th width=150 height=40>Black: </th>      <td> <span id='b-count'/> </th> <td width=300> <div id="b-slider">  </div> </td>  <td> <span id='b-priv'></span> </td> <td> <span id='b-reported'></span> </td> </tr>
+    <tr><th width=150 height=40>Asian: </th>      <td> <span id='a-count'/> </th> <td width=300> <div id="a-slider">  </div> </td>  <td> <span id='a-priv'></span> </td>  <td> <span id='a-reported'></span> </td> </tr>
+    <tr><th width=150 height=40>Population:</th>  <td> <span id='pop'/>     </td> <td width=300> </td> <td></td> <td> <span id='pop2'/> </td></tr>
+    <tr><th width=150 height=40>Epsilon:</th>     <td> <span id='e'/>       </td> <td width=300 colspan=3> <div id="e-slider">  </div> </td> </tr>
+</table>
+ 
+<button>Roll Again</button>
+
+    <p>Note 1: A new differentially private population is created every time any of the sliders is moved.</p>
+    <p>Note 2: The Laplace() noise operator has not been validated in this web-based demo.</p>
+</body>
+</html>

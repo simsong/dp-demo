@@ -1,0 +1,633 @@
+<html class="no-js" lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link  href="assets/css/docs.css" rel="stylesheet" />
+      <script src="assets/js/all.js"></script>
+      <script src="sprintf.min.js"></script>
+      <script src="js/privatize.js"></script>
+      <script src="js/clipboard.js"></script>
+      
+      <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+      <script>
+         var num_categories = 0;
+         var ok_to_update = true;
+         var ok_to_plot   = false;
+         
+         var groupQuarters = [
+            "Children NOT in Group Quarters",
+            "Adults NOT in Group Quarters",
+            "G100: Adult Detention Centers",
+            "G200: Juvenile Centers",
+            "G300: Nursing Facilities",
+            "G400: Treatment Facilities",
+            "G500: Student Housing",
+            "G600: Military Quarters",
+            "G700: Emergency Shelters",
+            "G800: Group Homes for Adults",
+            "G900: Misc."
+         ];
+                  
+         var categoryTemplate = [
+            '<div class="row">',
+               '<div class="small-3 medium-3 column">{2}</div>',
+               '<div class="small-1 medium-1 column"><input type="text" id="sliderOutput{0}" value="{1}" /></div>',
+               '<div class="small-4 medium-4 column">',
+                  '<div class="range-slider category-slider" id="slider{0}" data-slider  data-options="initial: {1}; start:0; end:99; step:1; display_selector:#sliderOutput{0}; trigger_input_change: true">',
+                     '<span class="range-slider-handle" id="sliderHandle{0}" role="slider" ></span>',
+                     '<span class="range-slider-active-segment"></span>',
+                  '</div>',
+               '</div>',
+               '<div class="small-1 medium-1 column"><span id="nosOutput{0}"></span></div>',
+               '<div class="small-1 medium-1 column"><span id="rawOutput{0}"></span></div>',
+               '<div class="small-1 medium-1 column"><span id="repOutput{0}"></span></div>',
+               '<div class="small-1 medium-1 column"><span id="errOutput{0}"></span></div>',
+            '</div>'
+         ];
+         
+         // Mean Function
+         function mean(vector) {
+            return vector.reduce(function(a, b) { return a + b; }) / vector.length;
+         }
+         
+         // RMS Function
+         function root_mean_square(vector) {
+            var sum_of_squares = vector.reduce(function(s,x) {return (s + x*x)}, 0);
+            return Math.sqrt(sum_of_squares / vector.length);
+         }
+
+         // LAD Function L1-Norm
+         function least_absolute_deviation(vector) {
+            return vector.reduce(function(s,x) {return (s + Math.abs(x))}, 0);
+         }
+          
+         // Format Function
+         // Usage: String.format('{0} + {0} = {1}', '1', '2');
+         if (!String.format) {
+            String.format = function(format) {
+               var args = Array.prototype.slice.call(arguments, 1);
+               return format.replace(/{(\d+)}/g, function(match, number) { 
+                  return typeof args[number] != 'undefined' ? args[number] : match;
+               });
+            };
+         }
+         
+         // Generate the Category Rows of the UI
+         function generateCatRow() {
+            var i;
+            var output = '';
+         
+            for (i = 0; i < groupQuarters.length; i++) {
+               var init_val = 50;
+               output += String.format(categoryTemplate.join('\n'), i, init_val, groupQuarters[i]);
+            }
+            
+            // Keep track of total categories, needed later in 'update_ui'
+            num_categories += groupQuarters.length;
+
+            return output;
+         }
+         
+         
+         //
+         // Main function to privatize data and display results
+         //
+         
+         var error_function = least_absolute_deviation;
+       //var error_function = root_mean_square;
+         
+         function getRandomColor() {
+            var letters = '0369C';
+            var color = '#';
+            for (var i = 0; i < 3; i++) {
+               var pick = Math.floor(Math.random() * 5);
+               color += letters[pick];
+               color += letters[pick];
+            }
+            return color;
+         }
+        
+         function update_plot() {
+
+            var data_table = '';
+         
+            var mean_data  = [];
+            var plot_data  = [];
+            var plot_color = [];
+
+            var intervals = $("#sliderInt").attr('data-slider');
+            var steps     = $("#sliderStp").attr('data-slider');
+            
+            // Initialize Plot Data
+            for (var s = 0; s < steps; s++) {
+               plot_data[s] = [];
+               mean_data[s] = [];
+            }
+            
+            // Fetch Epsilon / Budget Range
+            var min_epsilon = parseFloat(Math.min($("#sliderEmin").attr('data-slider'), $("#sliderEmax").attr('data-slider'))) / 10000.0;
+            var max_epsilon = parseFloat(Math.max($("#sliderEmin").attr('data-slider'), $("#sliderEmax").attr('data-slider'))) / 10000.0;
+            
+            var delta_epsilon = parseFloat((max_epsilon - min_epsilon) / parseFloat(steps-1));
+            
+            var epsilon = min_epsilon;
+            
+            var run_cnt = 0;
+            
+            data_table = sprintf("%-3s  %-4s  %6s  %7s  %10s\n", "run", "step", "repeat", "epsilon", "error");
+            
+            for (var i = 0; i < steps; i++) {
+               plot_data[i][0] = epsilon;
+               mean_data[i][0] = epsilon;
+               
+               for (var j = 0; j < intervals; j++) {
+                  var total_err = update_ui_main(epsilon, false);
+                  
+                  data_table += sprintf("%3d  %4d  %6d  %7.4f  %10.4f\n", run_cnt++, i, j, epsilon, total_err);
+                  
+                  plot_data[i][j+1] = total_err;                  
+               }
+               data_table += '\n';
+               epsilon += delta_epsilon;
+               
+               mean_data[i][1] = mean(plot_data[i].slice(1));
+            }
+            
+            var data1 = new google.visualization.DataTable();
+            var data2 = new google.visualization.DataTable();
+            
+            data1.addColumn('number', 'x');
+            data1.addColumn('number', 'repeats');
+
+            plot_color[0] = getRandomColor();
+            
+            for (var i = 1; i < intervals; i++) {
+               data1.addColumn({ id:'i'+i, type:'number'}); //, role:'interval' });
+               plot_color[i] = getRandomColor();
+            }
+  
+            data1.addRows(plot_data);
+
+            data2.addColumn('number', 'x');
+            data2.addColumn('number', 'mean');
+            data2.addRows(mean_data);
+
+            var base_options = {
+               lineWidth: 1,
+               intervals: { 'style':'line' },
+               legend: 'none',
+               colors: plot_color,
+               hAxis: { title: 'Privacy Budget (ε)' },
+               vAxis: { title: 'Total Error' }
+            }
+
+            if (ok_to_plot) {
+               var options1 = $.extend({}, base_options, { title: 'Total Error Introduced to Dataset by Privacy Budget (ε)' });
+               var options2 = $.extend({}, base_options, { title: 'Average Error Introduced to Dataset by Privacy Budget (ε)', color: '#339999' });
+
+               var chart1 = new google.visualization.LineChart(document.getElementById('data_plot1_google'));
+               var chart2 = new google.visualization.LineChart(document.getElementById('data_plot2_google'));
+               
+               chart1.draw(data1, options1);
+               chart2.draw(data2, options2);
+            }
+            
+            $('#data_table').html('<pre>'+data_table+'</pre>');
+         }
+         
+         function reset_ui() {            
+            $('.category-slider').foundation('slider', 'set_value', 50);
+            $('#sliderE').foundation('slider', 'set_value', 1000);
+         }
+
+         function clear_ui() {
+            $('.category-slider').foundation('slider', 'set_value', 0);
+            $('#sliderE').foundation('slider', 'set_value', 1000);
+         }
+
+         function random_ui() {
+            for (var i = 0; i < num_categories; i++) {
+               $('#slider'+i).foundation('slider', 'set_value', Math.floor(Math.random() * 100));
+            }
+         }
+         
+         function update_ui() {
+            if (!ok_to_update) {
+               ok_to_update = true;
+               return;
+            }
+            
+            // Fetch Epsilon / Budget
+            var epsilon = parseFloat($("#sliderE").attr('data-slider')) / 1000.0;
+            
+            var total_err = update_ui_main(epsilon, $('#optSwitch').prop('checked'));
+         }
+         
+         function update_ui_main(epsilon, optimize) {
+         
+            var total_val =  0;
+            var total_rep =  0;
+            var total_err = [];
+
+            // Privatize Data
+            var real_val    = [];
+            var private_val = [];
+            
+            for (var i = 0; i < num_categories; i++) {
+            
+               // Fetch real value from slider
+               var val = parseInt($('#slider'+i).attr('data-slider'));
+               
+               // Calculate noise from budget=e and sensitivity=1
+               var noise = geometric_noise(epsilon, 1);
+               
+               /*
+                  If you want to try Laplace
+               */
+               //var noise = laplace_noise(epsilon, 1);
+               
+               // Add noise to real value to yield private value
+               var private = noise + val;
+               
+               // Remember real and private values, needed later in optimizer
+               real_val[i]    = val;
+               private_val[i] = private;
+               
+               // Track total real value
+               total_val += val;
+               
+               // Update UI
+               $('#sliderHandle'+i).html(val);
+               $('#nosOutput'+i).html(sprintf('%2.1f', noise));
+               $('#rawOutput'+i).html(sprintf('%4.1f', private));
+            }
+            
+            /* 
+               Optimizer
+               Distribute error over reported data until sum(reported) = sum(real)
+            */
+            add = function(a, b) { return a + b; };
+            
+            // Check state of optimizer ON/OFF switch from UI
+            if (optimize) {
+               var cycles = 100000;	// repeat a max of 100000 cycles
+               while (cycles-- > 0) {
+                  var error = total_val - private_val.reduce(add);
+                  if (error == 0) break;
+                  var d = Math.floor(Math.random() * private_val.length);
+                  private_val[d]  = Math.max(private_val[d] + sgn(error), 0);
+               }
+            }
+            
+            // Update private value and error UI
+            for (var i = 0; i < num_categories; i++) {
+               var err = real_val[i] - private_val[i];
+               
+               $('#repOutput'+i).html(sprintf('%d', private_val[i]));
+               $('#errOutput'+i).html(sprintf('%d', err));
+               
+               // Track total reported value and error
+               total_rep += private_val[i];
+               total_err[i] = err;
+            }
+
+            // Update Epsilon UI
+            $('#sliderOutputE').html(sprintf('%6.3f',epsilon));
+            $('#sliderHandleE').html(sprintf('%6.3f',epsilon));
+
+            // Update Total Values UI
+            $('#totalRelOutput').html(sprintf('%d', total_val));
+            $('#totalRepOutput').html(sprintf('%d', total_rep));
+            $('#totalErrOutput').html(sprintf('%8.3f', error_function(total_err)));
+            
+            return error_function(total_err);
+         }
+         
+         /*
+            Buffer slider 'change' events
+            Waits until slider is done moving before updating UI
+         */
+         var timers = [];
+         
+         function waitForFinalEvent(callback, ms, uniqueId) {
+            if (timers[uniqueId]) {
+               clearTimeout(timers[uniqueId]);
+            }
+            timers[uniqueId] = setTimeout(callback, ms);
+         }
+
+         function show_data() {
+            $('#data_table').toggle(); 
+         }
+
+         function copy_data() {
+            copyTextToClipboard($('#data_table').text());
+         }
+
+         
+         // JQuery Document Ready
+         // Initialize the User Interface
+         $(document).ready(function() {
+         
+            // Generate Category Rows
+            $('#categories').html(generateCatRow());
+
+            // Initialize Foundation 6
+            $(document).foundation({ slider: { on_change: function() { update_ui(); /* waitForFinalEvent(update_ui, 10, 'slider_change'); */ } }});
+
+            
+            // Update UI when optimize switch changes
+            
+            $('#optSwitch').change(function() {
+               if ($('#optSwitch').prop('checked')) {
+                  $("#opt_label").html("Optimizer On");
+               } else {
+                  $("#opt_label").html("Optimizer Off");
+               }
+               update_ui();
+            });
+            
+            
+            // Toggle Animation On Off
+
+            var animation_interval;
+            
+            $('#anmSwitch').change(function() {
+               if ($('#anmSwitch').prop('checked')) {
+                  $("#anm_label").html("Animation On");
+                  animation_interval = setInterval(update_plot, 1500);
+               } else {
+                  $("#anm_label").html("Animation Off");
+                  clearInterval(animation_interval);
+               }
+            });
+            
+            
+            // Toggle Graphing On Off
+            
+            $('#grfSwitch').change(function() {
+               if ($('#grfSwitch').prop('checked')) {
+                  $("#grf_label").html("Graphing On");
+                  $(".google_plot").show();
+                  
+                  ok_to_plot = true;
+                  update_plot();
+               } else {
+                  $("#grf_label").html("Graphing Off");
+                  $(".google_plot").hide();
+                  
+                  ok_to_plot = false;
+               }
+            });
+
+            // Capture Plot Slider Change Events
+            $('.plotter').on('change.fndtn.slider', function() {
+               // Prevent UI from updating
+               ok_to_update = false;
+               
+               var min_epsilon = Math.min($("#sliderEmin").attr('data-slider'), $("#sliderEmax").attr('data-slider'));
+               var max_epsilon = Math.max($("#sliderEmin").attr('data-slider'), $("#sliderEmax").attr('data-slider'));
+                  
+               $('#sliderOutputEMM').html(parseFloat(min_epsilon / 10000) + ' - ' + parseFloat(max_epsilon / 10000));
+               
+               $('#sliderOutputStp').html($("#sliderStp").attr('data-slider'));
+               $('#sliderOutputInt').html($("#sliderInt").attr('data-slider'));
+            });
+            
+            $(window).resize(function() {
+               waitForFinalEvent(update_plot, 300, "window_resize");
+            });
+            
+            $('#data_table').hide();
+            $(".google_plot").hide();
+            
+            $('#optSwitch').prop('checked', false);
+            $('#anmSwitch').prop('checked', false);
+            $('#grfSwitch').prop('checked', false);
+            
+            $("#opt_label").html("Optimizer Off");
+            $("#anm_label").html("Animation Off");
+            $("#grf_label").html("Graphing Off");
+
+            // Load Google Charts
+            google.charts.load('current', { packages: ['corechart'], callback: update_plot });
+
+         });
+         
+      </script>
+
+      <style>
+         body {
+            font-size: .85rem;
+            padding: 10px;
+         }
+         
+         body.waiting * {
+            cursor: progress !important;
+         }
+         
+         span {
+            text-align: center;
+         }
+
+         .range-slider-handle {
+            height: auto;
+            min-height: 22px;
+            width: 3em;
+            color: white;
+            border-radius: 3px;
+         }
+         
+         .column,
+         .columns {
+            height: 50px;
+            border-left: 1px solid black;
+         }
+         
+         .column:last-child,
+         .columns:last-child {
+            border-right: 1px solid black;
+         }
+         
+         .row {
+            border: 0;
+            border-bottom: 1px solid black;
+         }
+         .row:first-child {
+            border-top: 1px solid black;
+         }
+         
+         #categories {
+            border:  0;
+            padding: 0;
+            margin:  0;
+         }
+
+         #buttons {
+            border:  0;
+            padding: 10px;
+            text-align: center;
+         }
+         
+         #sliderEMin, #sliderEMax {
+            margin-top: 7px;
+            margin-bottom: 7px;
+         }
+         
+         .google_plot {
+            height: 400px;
+         }
+         
+         </style>
+   </head>
+   
+   <body>
+      <div class="row">
+         <h2>Differentially Private Group Quarters Simulator</h2>
+            Algorithm: the counts are set by the sliders, then privatized with the differential privacy Geometric mechanism.
+            The privatized values are rounded to the nearest non-negative integer.
+            Finally, the error between the actual count and the privatized count is randomly distributed among the values.
+      </div>
+
+      <!-- Header -->
+      <div class="row">
+         <div class="small-3 medium-3 column">Category</div>
+         <div class="small-5 medium-5 column">Real Value</div>
+         <div class="small-1 medium-1 column">Add Noise</div>
+         <div class="small-1 medium-1 column">Raw Value</div>
+         <div class="small-1 medium-1 column">Rep Value</div>
+         <div class="small-1 medium-1 column">Error</div>
+      </div>
+
+      <!-- Categories -->
+      <div id="categories"></div>
+      
+      <!-- Total -->
+      <div class="row">
+         <div class="small-3 medium-3 column">Total</div>
+         <div class="small-1 medium-1 column"><span id="totalRelOutput"></span></div>
+         <div class="small-2 medium-2 column">
+            <h5 id="opt_label">Optimizer On/Off</h5>
+         </div>
+         <div class="small-4 medium-4 column">
+            <div class="switch small">
+               <input class="switch-input" id="optSwitch" type="checkbox" />
+               <label class="switch-paddle" for="optSwitch"></label>
+            </div>
+         </div>
+         <div class="small-1 medium-1 column"><span id="totalRepOutput"></span></div>
+         <div class="small-1 medium-1 column"><span id="totalErrOutput"></span></div>
+      </div>
+
+      <!-- Epsilon -->
+      <div class="row">
+         <div class="small-3 medium-3 column">Budget (&epsilon;)</div>
+         <div class="small-1 medium-1 column"><span id="sliderOutputE"></span></div>
+         <div class="small-8 medium-8 column">
+            <div class="range-slider" id="sliderE" data-slider data-options="initial: 1000; start:1; end:10000; step:1; trigger_input_change: true">
+               <span class="range-slider-handle" id="sliderHandleE" role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+         </div>
+      </div>
+      
+      <div class="row">
+         <button class="button" onclick="update_ui()">Roll Again</button>
+         <button class="button" onclick="reset_ui()">Reset</button>
+         <button class="button" onclick="clear_ui()">Clear</button>
+         <button class="button" onclick="random_ui()">Random</button>
+      </div>
+      
+      
+      <!-- Plotter Controls -->
+      
+      <!-- Epsilon Range    -->
+      <div class="row">
+         <div class="small-2 medium-2 column">Range &epsilon;</div>
+         <div class="small-2 medium-2 column"><span id="sliderOutputEMM"></span></div>
+         <div class="small-8 medium-8 column">
+
+            <div class="range-slider plotter" id="sliderEmin" data-slider data-options="initial: 50; start:1; end:100000; step: 5">
+               <span class="range-slider-handle" id="sliderHandleEmin" role="slider" tabindex="0">MIN</span>
+               <span class="range-slider-active-segment"></span>
+            </div>         
+
+            <div class="range-slider plotter" id="sliderEmax" data-slider data-options="initial: 1950; start:1; end:100000; step: 5">
+               <span class="range-slider-handle" id="sliderHandleEmax" role="slider" tabindex="0">MAX</span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="small-2 medium-2 column">Steps</div>
+         <div class="small-2 medium-2 column"><input type="text" id="sliderOutputStp" value="50" /></div>
+         <div class="small-8 medium-8 column">
+
+            <div class="range-slider plotter" id="sliderStp" data-slider data-options="initial: 50; start:1; end:100; step: 1; display_selector:#sliderOutputStp">
+               <span class="range-slider-handle"  role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+
+         </div>
+      </div>
+      
+      
+      <div class="row">
+         <div class="small-2 medium-2 column">Repeats</div>
+         <div class="small-2 medium-2 column"><input type="text" id="sliderOutputInt" value="5" /></div>
+         <div class="small-8 medium-8 column">
+
+            <div class="range-slider plotter" id="sliderInt" data-slider data-options="initial: 5; start:1; end:20; step: 1; display_selector:#sliderOutputInt">
+               <span class="range-slider-handle"  role="slider" tabindex="0"></span>
+               <span class="range-slider-active-segment"></span>
+            </div>
+
+         </div>
+      </div>
+
+      <div class="row">
+         <div class="small-2 medium-2 column">
+            <button class="button" onclick="update_plot()">Run Experiment</button>
+         </div>
+         
+         <div class="small-2 medium-2 column">
+            <h5 id="grf_label"></h5>
+         </div>
+         <div class="small-1 medium-1 column">
+            <div class="switch small">
+               <input class="switch-input" id="grfSwitch" type="checkbox" />
+               <label class="switch-paddle" for="grfSwitch"></label>
+            </div>
+         </div>
+         
+         <div class="small-2 medium-2 column">
+            <h5 id="anm_label"></h5>
+         </div>
+         <div class="small-5 medium-5 column">
+            <div class="switch small">
+               <input class="switch-input" id="anmSwitch" type="checkbox"  />
+               <label class="switch-paddle" for="anmSwitch"></label>
+            </div>
+         </div>
+
+      </div>
+
+      <div class="row">
+         <div class="google_plot" id="data_plot1_google"></div>
+      </div>
+      <div class="row">
+         <div class="google_plot" id="data_plot2_google"></div>
+      </div>
+      
+      <div class="row">
+         <button class="button" onclick="show_data()">Show Data</button>            
+         <button class="button" onclick="copy_data()">Copy Data to Clipboard</button>            
+         <div id="data_table"></div>
+      </div>
+
+   </body>
+</html>
+
